@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 import axios from 'axios';
 import '@/App.css';
 import LandingPage from './pages/LandingPage';
@@ -62,8 +62,8 @@ function App() {
   }
 
   return (
-    <AuthContext.Provider value={{ user, token, login, logout }}>
-      <BrowserRouter>
+    <AuthContext.Provider value={{ user, login, logout, token }}>
+      <HashRouter>
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={user ? <Navigate to="/dashboard" /> : <LoginPage />} />
@@ -75,7 +75,7 @@ function App() {
           <Route path="/profile" element={user ? <ProfilePage /> : <Navigate to="/login" />} />
         </Routes>
         <Toaster position="top-center" />
-      </BrowserRouter>
+      </HashRouter>
     </AuthContext.Provider>
   );
 }
