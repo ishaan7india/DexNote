@@ -95,6 +95,7 @@ class Progress(BaseModel):
 
 class EnrollmentRequest(BaseModel):
     course_id: str
+    terms_accepted: bool = False  # For courses requiring T&C
 
 class ProgressUpdate(BaseModel):
     module_id: str
