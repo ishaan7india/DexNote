@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 import axios from 'axios';
 import '@/App.css';
+
 import LandingPage from './pages/LandingPage';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
@@ -13,7 +14,7 @@ import ProfilePage from './pages/ProfilePage';
 import NotesPage from './pages/NotesPage';
 import { Toaster } from '@/components/ui/sonner';
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000';
 const API = `${BACKEND_URL}/api`;
 
 export const AuthContext = React.createContext();
@@ -42,10 +43,9 @@ function App() {
     }
   }, [token]);
 
-  const login = (token, userData) => {
-    localStorage.setItem('token', token);
-    setToken(token);
-    setUser(userData);
+  const login = (newToken) => {
+    localStorage.setItem('token', newToken);
+    setToken(newToken);
   };
 
   const logout = () => {
@@ -55,29 +55,25 @@ function App() {
   };
 
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-blue-50">
-        <div className="text-xl font-medium text-slate-600">Loading...</div>
-      </div>
-    );
+    return <div className="flex items-center justify-center h-screen">Loading...</div>;
   }
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, token }}>
+    <AuthContext.Provider value={{ user, token, login, logout, API }}>
       <HashRouter>
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={user ? <Navigate to="/dashboard" /> : <LoginPage />} />
           <Route path="/signup" element={user ? <Navigate to="/dashboard" /> : <SignupPage />} />
           <Route path="/dashboard" element={user ? <Dashboard /> : <Navigate to="/login" />} />
-          <Route path="/courses" element={<CoursesPage />} />
-          <Route path="/courses/:id" element={<CourseDetailPage />} />
-          <Route path="/ai-tools" element={<AIToolsPage />} />
-          <Route path="/notes" element={<NotesPage />} />
+          <Route path="/courses" element={user ? <CoursesPage /> : <Navigate to="/login" />} />
+          <Route path="/courses/:courseId" element={user ? <CourseDetailPage /> : <Navigate to="/login" />} />
+          <Route path="/ai-tools" element={user ? <AIToolsPage /> : <Navigate to="/login" />} />
           <Route path="/profile" element={user ? <ProfilePage /> : <Navigate to="/login" />} />
+          <Route path="/notes" element={user ? <NotesPage /> : <Navigate to="/login" />} />
         </Routes>
-        <Toaster position="top-center" />
       </HashRouter>
+      <Toaster position="top-right" />
     </AuthContext.Provider>
   );
 }
