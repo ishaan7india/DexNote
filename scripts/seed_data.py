@@ -307,7 +307,95 @@ async def seed_database():
         }
     ]
     
-    all_modules = python_modules + ai_modules
+    # Sample modules for AI Generalist
+    ai_generalist_modules = [
+        {
+            "id": "module-13-1",
+            "course_id": "course-13",
+            "title": "Introduction to AI Tools Ecosystem",
+            "content": "Welcome to the AI Generalist course! Learn about:\n\n• The AI revolution and its impact\n• Overview of major AI platforms and tools\n• How to choose the right AI tool for your task\n• Building an AI-powered workflow\n• Ethical considerations in AI usage\n\nThis course will transform how you work and create.",
+            "order": 1,
+            "created_at": "2025-01-01T00:00:00Z"
+        },
+        {
+            "id": "module-13-2",
+            "course_id": "course-13",
+            "title": "Mastering Emergent Platform",
+            "content": "Deep dive into Emergent - the AI-powered development platform:\n\n• Understanding Emergent's capabilities\n• Building full-stack applications with AI\n• Natural language to code conversion\n• Integrating AI agents into your workflow\n• Best practices for AI-assisted development\n• Real-world project examples\n\nLearn to build applications 10x faster with Emergent.",
+            "order": 2,
+            "created_at": "2025-01-01T00:00:00Z"
+        },
+        {
+            "id": "module-13-3",
+            "course_id": "course-13",
+            "title": "Replit & Collaborative Coding",
+            "content": "Master Replit for rapid prototyping and collaboration:\n\n• Setting up development environments instantly\n• Real-time collaborative coding\n• Deploying applications with one click\n• Using Replit AI for code assistance\n• Building and sharing projects\n\nCreate and deploy projects in minutes, not hours.",
+            "order": 3,
+            "created_at": "2025-01-01T00:00:00Z"
+        },
+        {
+            "id": "module-13-4",
+            "course_id": "course-13",
+            "title": "WisprFlow for Productivity",
+            "content": "Boost your productivity with WisprFlow:\n\n• Voice-to-text AI technology\n• Automating documentation and note-taking\n• Integration with other tools\n• Creating content faster with voice\n• Best practices for voice-powered workflows\n\nTransform your productivity with voice AI.",
+            "order": 4,
+            "created_at": "2025-01-01T00:00:00Z"
+        },
+        {
+            "id": "module-13-5",
+            "course_id": "course-13",
+            "title": "Suno: AI Music Generation",
+            "content": "Create professional music with Suno:\n\n• Understanding AI music generation\n• Creating songs from text prompts\n• Music styles and genres\n• Customizing your compositions\n• Commercial use and licensing\n\nGenerate original music for your projects in minutes.",
+            "order": 5,
+            "created_at": "2025-01-01T00:00:00Z"
+        },
+        {
+            "id": "module-13-6",
+            "course_id": "course-13",
+            "title": "Gemini & Google AI Ecosystem",
+            "content": "Leverage Google's Gemini AI:\n\n• Introduction to Gemini models\n• Multimodal AI capabilities (text, image, video)\n• Using Gemini Gems for custom AI\n• Integration with Google Workspace\n• Advanced prompt engineering for Gemini\n\nHarness Google's latest AI technology.",
+            "order": 6,
+            "created_at": "2025-01-01T00:00:00Z"
+        }
+    ]
+    
+    # Sample modules for Cybersecurity course
+    cybersecurity_modules = [
+        {
+            "id": "module-14-1",
+            "course_id": "course-14",
+            "title": "Introduction to Cybersecurity",
+            "content": "Welcome to Cybersecurity & Ethical Hacking:\n\n⚠️ IMPORTANT: This course is for educational and defensive security purposes only. Using these skills for unauthorized access is illegal.\n\n• What is cybersecurity?\n• Types of cyber threats and attacks\n• The CIA triad (Confidentiality, Integrity, Availability)\n• Legal and ethical considerations\n• Career paths in cybersecurity\n\nBuild a strong foundation in security principles.",
+            "order": 1,
+            "created_at": "2025-01-01T00:00:00Z"
+        },
+        {
+            "id": "module-14-2",
+            "course_id": "course-14",
+            "title": "Network Security Fundamentals",
+            "content": "Understanding network security:\n\n• TCP/IP and networking basics\n• Common network protocols (HTTP, DNS, FTP)\n• Firewalls and network segmentation\n• Network monitoring and analysis\n• Wireless security\n• VPNs and encryption\n\nLearn how networks work and how to secure them.",
+            "order": 2,
+            "created_at": "2025-01-01T00:00:00Z"
+        },
+        {
+            "id": "module-14-3",
+            "course_id": "course-14",
+            "title": "Ethical Hacking Methodology",
+            "content": "Learn the ethical hacking process:\n\n• Reconnaissance and information gathering\n• Scanning and enumeration\n• Vulnerability assessment\n• Exploitation techniques (authorized only)\n• Post-exploitation and reporting\n• Maintaining access vs. covering tracks\n\n⚠️ Always obtain written permission before testing!",
+            "order": 3,
+            "created_at": "2025-01-01T00:00:00Z"
+        },
+        {
+            "id": "module-14-4",
+            "course_id": "course-14",
+            "title": "Web Application Security",
+            "content": "Securing web applications:\n\n• OWASP Top 10 vulnerabilities\n• SQL injection and prevention\n• Cross-site scripting (XSS)\n• Cross-site request forgery (CSRF)\n• Authentication and session management\n• Secure coding practices\n\nProtect web applications from common attacks.",
+            "order": 4,
+            "created_at": "2025-01-01T00:00:00Z"
+        }
+    ]
+    
+    all_modules = python_modules + ai_modules + ai_generalist_modules + cybersecurity_modules
     await db.modules.insert_many(all_modules)
     print(f"✓ Inserted {len(all_modules)} modules")
     
