@@ -227,6 +227,10 @@ async def enroll_course(enrollment_data: EnrollmentRequest, current_user: User =
     if not course:
         raise HTTPException(status_code=404, detail="Course not found")
     
+    # Check if course requires terms acceptance
+    if course.get("requires_terms", False) and not enrollment_data.terms_accepted:
+        raise HTTPException(status_code=400, detail="Terms and conditions must be accepted for this course")
+    
     enrollment = Enrollment(
         user_id=current_user.id,
         course_id=enrollment_data.course_id
