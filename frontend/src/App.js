@@ -10,6 +10,7 @@ import CoursesPage from './pages/CoursesPage';
 import CourseDetailPage from './pages/CourseDetailPage';
 import AIToolsPage from './pages/AIToolsPage';
 import ProfilePage from './pages/ProfilePage';
+import NotesPage from './pages/NotesPage';
 import { Toaster } from '@/components/ui/sonner';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
@@ -72,6 +73,7 @@ function App() {
           <Route path="/courses" element={<CoursesPage />} />
           <Route path="/courses/:id" element={<CourseDetailPage />} />
           <Route path="/ai-tools" element={<AIToolsPage />} />
+          <Route path="/notes" element={<NotesPage />} />
           <Route path="/profile" element={user ? <ProfilePage /> : <Navigate to="/login" />} />
         </Routes>
         <Toaster position="top-center" />
