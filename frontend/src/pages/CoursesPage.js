@@ -149,6 +149,7 @@ const CoursesPage = () => {
             <TabsTrigger value="all" data-testid="tab-all">All Courses</TabsTrigger>
             <TabsTrigger value="coding" data-testid="tab-coding">Coding</TabsTrigger>
             <TabsTrigger value="ai-tools" data-testid="tab-ai-tools">AI Tools</TabsTrigger>
+            <TabsTrigger value="mathematics" data-testid="tab-mathematics">Mathematics</TabsTrigger>
           </TabsList>
 
           <TabsContent value="all">
@@ -174,6 +175,14 @@ const CoursesPage = () => {
           <TabsContent value="ai-tools">
             <div className="grid md:grid-cols-3 gap-6" data-testid="ai-tools-courses-grid">
               {filteredCourses('ai-tools').map(course => (
+                <CourseCard key={course.id} course={course} />
+              ))}
+            </div>
+          </TabsContent>
+
+          <TabsContent value="mathematics">
+            <div className="grid md:grid-cols-3 gap-6" data-testid="mathematics-courses-grid">
+              {filteredCourses('mathematics').map(course => (
                 <CourseCard key={course.id} course={course} />
               ))}
             </div>
