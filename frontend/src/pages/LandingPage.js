@@ -19,6 +19,9 @@ const LandingPage = () => {
             <Link to="/ai-tools">
               <Button variant="ghost" data-testid="nav-ai-tools-btn">AI Tools</Button>
             </Link>
+            <Link to="/notes">
+              <Button variant="ghost" data-testid="nav-notes-btn">Notes</Button>
+            </Link>
             <Link to="/login">
               <Button variant="outline" data-testid="nav-login-btn">Login</Button>
             </Link>
@@ -40,12 +43,12 @@ const LandingPage = () => {
           </p>
           <div className="flex gap-4 justify-center">
             <Link to="/signup">
-              <Button size="lg" data-testid="hero-get-started-btn" className="bg-gradient-to-r from-blue-600 to-teal-600 text-white hover:from-blue-700 hover:to-teal-700 text-lg px-8 py-6">
+              <Button size="lg" className="bg-gradient-to-r from-blue-600 to-teal-600 text-white hover:from-blue-700 hover:to-teal-700 text-lg px-8 py-6">
                 Get Started Free
               </Button>
             </Link>
             <Link to="/courses">
-              <Button size="lg" variant="outline" data-testid="hero-explore-courses-btn" className="text-lg px-8 py-6">
+              <Button size="lg" variant="outline" className="text-lg px-8 py-6">
                 Explore Courses
               </Button>
             </Link>
@@ -69,7 +72,6 @@ const LandingPage = () => {
                 Learn programming from scratch or advance your skills with structured courses covering Python, JavaScript, and more.
               </p>
             </div>
-
             <div className="bg-white/60 backdrop-blur-sm p-8 rounded-2xl border border-slate-200 hover:shadow-xl transition-all hover:-translate-y-1" data-testid="feature-ai-tools">
               <div className="w-14 h-14 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mb-6">
                 <Brain className="w-7 h-7 text-white" />
@@ -79,7 +81,6 @@ const LandingPage = () => {
                 Discover and master the latest AI tools that are transforming how we code, create, and innovate.
               </p>
             </div>
-
             <div className="bg-white/60 backdrop-blur-sm p-8 rounded-2xl border border-slate-200 hover:shadow-xl transition-all hover:-translate-y-1" data-testid="feature-progress-tracking">
               <div className="w-14 h-14 bg-gradient-to-br from-orange-500 to-red-500 rounded-xl flex items-center justify-center mb-6">
                 <TrendingUp className="w-7 h-7 text-white" />
@@ -123,7 +124,7 @@ const LandingPage = () => {
             Join thousands of learners mastering coding and AI tools on DexNote.
           </p>
           <Link to="/signup">
-            <Button size="lg" data-testid="cta-signup-btn" className="bg-gradient-to-r from-blue-600 to-teal-600 text-white hover:from-blue-700 hover:to-teal-700 text-lg px-10 py-6">
+            <Button size="lg" className="bg-gradient-to-r from-blue-600 to-teal-600 text-white hover:from-blue-700 hover:to-teal-700 text-lg px-10 py-6">
               Sign Up Now
             </Button>
           </Link>
