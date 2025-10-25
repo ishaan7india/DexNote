@@ -125,6 +125,62 @@ async def seed_database():
             "modules_count": 8,
             "thumbnail": "",
             "created_at": "2025-01-01T00:00:00Z"
+        },
+        {
+            "id": "course-10",
+            "title": "Mathematics for Programming",
+            "description": "Build a strong mathematical foundation for programming. Learn algebra, calculus, discrete mathematics, linear algebra, and probability theory essential for computer science.",
+            "category": "mathematics",
+            "difficulty": "intermediate",
+            "duration": "10 weeks",
+            "modules_count": 12,
+            "thumbnail": "",
+            "created_at": "2025-01-01T00:00:00Z"
+        },
+        {
+            "id": "course-11",
+            "title": "Statistics & Probability",
+            "description": "Master statistical concepts and probability theory. Learn descriptive statistics, inferential statistics, hypothesis testing, and data analysis techniques for data science.",
+            "category": "mathematics",
+            "difficulty": "intermediate",
+            "duration": "8 weeks",
+            "modules_count": 10,
+            "thumbnail": "",
+            "created_at": "2025-01-01T00:00:00Z"
+        },
+        {
+            "id": "course-12",
+            "title": "Linear Algebra for Machine Learning",
+            "description": "Understand the mathematical foundations of machine learning. Master vectors, matrices, eigenvalues, transformations, and their applications in AI and data science.",
+            "category": "mathematics",
+            "difficulty": "advanced",
+            "duration": "6 weeks",
+            "modules_count": 8,
+            "thumbnail": "",
+            "created_at": "2025-01-01T00:00:00Z"
+        },
+        {
+            "id": "course-13",
+            "title": "AI Generalist: Complete AI Tools Mastery",
+            "description": "Become an AI power user with this comprehensive course. Master Emergent, Replit, WisprFlow, Suno, Gemini Gems, and many other cutting-edge AI tools. Learn to integrate multiple AI platforms into powerful workflows for coding, content creation, automation, and productivity.",
+            "category": "ai-tools",
+            "difficulty": "intermediate",
+            "duration": "12 weeks",
+            "modules_count": 15,
+            "thumbnail": "",
+            "created_at": "2025-01-01T00:00:00Z"
+        },
+        {
+            "id": "course-14",
+            "title": "Cybersecurity & Ethical Hacking",
+            "description": "Learn cybersecurity fundamentals and ethical hacking techniques. Master network security, penetration testing, vulnerability assessment, and defensive security practices. This course is for educational purposes only and requires agreement to use knowledge ethically and legally.",
+            "category": "coding",
+            "difficulty": "advanced",
+            "duration": "14 weeks",
+            "modules_count": 18,
+            "thumbnail": "",
+            "requires_terms": True,
+            "created_at": "2025-01-01T00:00:00Z"
         }
     ]
     
