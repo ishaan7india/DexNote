@@ -13,15 +13,6 @@ const LandingPage = () => {
             DexNote
           </div>
           <div className="flex gap-4">
-            <Link to="/courses">
-              <Button variant="ghost" data-testid="nav-courses-btn">Courses</Button>
-            </Link>
-            <Link to="/ai-tools">
-              <Button variant="ghost" data-testid="nav-ai-tools-btn">AI Tools</Button>
-            </Link>
-            <Link to="/notes">
-              <Button variant="ghost" data-testid="nav-notes-btn">Notes</Button>
-            </Link>
             <Link to="/login">
               <Button variant="outline" data-testid="nav-login-btn">Login</Button>
             </Link>
@@ -35,21 +26,21 @@ const LandingPage = () => {
       {/* Hero Section */}
       <section className="pt-32 pb-20 px-6">
         <div className="max-w-7xl mx-auto text-center">
-          <h1 className="text-6xl font-bold mb-6 bg-gradient-to-r from-slate-900 via-blue-800 to-teal-700 bg-clip-text text-transparent" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>
-            Master Coding & AI Tools
+          <h1 className="text-6xl font-bold mb-6 bg-gradient-to-r from-blue-600 via-teal-600 to-blue-600 bg-clip-text text-transparent animate-gradient">
+            Smart Notes, Smarter Learning
           </h1>
-          <p className="text-xl text-slate-600 mb-10 max-w-2xl mx-auto">
-            Join DexNote's comprehensive learning platform. Build real-world skills with hands-on courses and cutting-edge AI tools.
+          <p className="text-xl text-slate-600 mb-8 max-w-2xl mx-auto">
+            Transform your study experience with AI-powered note-taking, interactive courses, and collaborative tools.
           </p>
           <div className="flex gap-4 justify-center">
             <Link to="/signup">
-              <Button size="lg" className="bg-gradient-to-r from-blue-600 to-teal-600 text-white hover:from-blue-700 hover:to-teal-700 text-lg px-8 py-6">
+              <Button size="lg" className="bg-gradient-to-r from-blue-600 to-teal-600 text-white hover:from-blue-700 hover:to-teal-700 shadow-lg hover:shadow-xl transition-all">
                 Get Started Free
               </Button>
             </Link>
-            <Link to="/courses">
-              <Button size="lg" variant="outline" className="text-lg px-8 py-6">
-                Explore Courses
+            <Link to="/login">
+              <Button size="lg" variant="outline" className="border-2 border-blue-600 text-blue-600 hover:bg-blue-50">
+                Sign In
               </Button>
             </Link>
           </div>
@@ -57,92 +48,100 @@ const LandingPage = () => {
       </section>
 
       {/* Features Section */}
-      <section className="py-20 px-6">
+      <section className="py-20 px-6 bg-white/50">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-4xl font-bold text-center mb-16 text-slate-900" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>
-            Why Choose DexNote?
+          <h2 className="text-4xl font-bold text-center mb-16 text-slate-800">
+            Everything You Need to Excel
           </h2>
           <div className="grid md:grid-cols-3 gap-8">
-            <div className="bg-white/60 backdrop-blur-sm p-8 rounded-2xl border border-slate-200 hover:shadow-xl transition-all hover:-translate-y-1" data-testid="feature-coding-courses">
-              <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-teal-500 rounded-xl flex items-center justify-center mb-6">
-                <Code className="w-7 h-7 text-white" />
+            <div className="p-8 rounded-2xl bg-gradient-to-br from-blue-50 to-blue-100 hover:shadow-xl transition-shadow">
+              <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center mb-4">
+                <Brain className="text-white" size={24} />
               </div>
-              <h3 className="text-xl font-bold mb-4 text-slate-900">Coding Courses</h3>
-              <p className="text-slate-600">
-                Learn programming from scratch or advance your skills with structured courses covering Python, JavaScript, and more.
-              </p>
+              <h3 className="text-xl font-semibold mb-3 text-slate-800">AI-Powered Tools</h3>
+              <p className="text-slate-600">Leverage cutting-edge AI to enhance your learning with smart summaries and insights.</p>
             </div>
-            <div className="bg-white/60 backdrop-blur-sm p-8 rounded-2xl border border-slate-200 hover:shadow-xl transition-all hover:-translate-y-1" data-testid="feature-ai-tools">
-              <div className="w-14 h-14 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mb-6">
-                <Brain className="w-7 h-7 text-white" />
+            <div className="p-8 rounded-2xl bg-gradient-to-br from-teal-50 to-teal-100 hover:shadow-xl transition-shadow">
+              <div className="w-12 h-12 bg-teal-600 rounded-lg flex items-center justify-center mb-4">
+                <BookOpen className="text-white" size={24} />
               </div>
-              <h3 className="text-xl font-bold mb-4 text-slate-900">AI Tools</h3>
-              <p className="text-slate-600">
-                Discover and master the latest AI tools that are transforming how we code, create, and innovate.
-              </p>
+              <h3 className="text-xl font-semibold mb-3 text-slate-800">Interactive Courses</h3>
+              <p className="text-slate-600">Access curated courses designed to help you master any subject efficiently.</p>
             </div>
-            <div className="bg-white/60 backdrop-blur-sm p-8 rounded-2xl border border-slate-200 hover:shadow-xl transition-all hover:-translate-y-1" data-testid="feature-progress-tracking">
-              <div className="w-14 h-14 bg-gradient-to-br from-orange-500 to-red-500 rounded-xl flex items-center justify-center mb-6">
-                <TrendingUp className="w-7 h-7 text-white" />
+            <div className="p-8 rounded-2xl bg-gradient-to-br from-purple-50 to-purple-100 hover:shadow-xl transition-shadow">
+              <div className="w-12 h-12 bg-purple-600 rounded-lg flex items-center justify-center mb-4">
+                <Code className="text-white" size={24} />
               </div>
-              <h3 className="text-xl font-bold mb-4 text-slate-900">Progress Tracking</h3>
-              <p className="text-slate-600">
-                Track your learning journey with detailed progress metrics and personalized dashboards.
-              </p>
+              <h3 className="text-xl font-semibold mb-3 text-slate-800">Smart Note-Taking</h3>
+              <p className="text-slate-600">Organize your thoughts with powerful markdown support and real-time collaboration.</p>
             </div>
           </div>
         </div>
       </section>
 
       {/* Stats Section */}
-      <section className="py-20 px-6 bg-gradient-to-r from-blue-600 to-teal-600">
+      <section className="py-20 px-6">
         <div className="max-w-7xl mx-auto">
-          <div className="grid md:grid-cols-3 gap-12 text-center text-white">
-            <div data-testid="stat-courses">
-              <div className="text-5xl font-bold mb-2">50+</div>
-              <div className="text-blue-100 text-lg">Expert-Led Courses</div>
+          <div className="grid md:grid-cols-3 gap-8 text-center">
+            <div className="p-6">
+              <div className="flex items-center justify-center mb-3">
+                <Users className="text-blue-600" size={32} />
+              </div>
+              <div className="text-4xl font-bold text-slate-800 mb-2">10K+</div>
+              <div className="text-slate-600">Active Students</div>
             </div>
-            <div data-testid="stat-students">
-              <div className="text-5xl font-bold mb-2">10k+</div>
-              <div className="text-blue-100 text-lg">Active Learners</div>
+            <div className="p-6">
+              <div className="flex items-center justify-center mb-3">
+                <Award className="text-teal-600" size={32} />
+              </div>
+              <div className="text-4xl font-bold text-slate-800 mb-2">50+</div>
+              <div className="text-slate-600">Expert Courses</div>
             </div>
-            <div data-testid="stat-completion">
-              <div className="text-5xl font-bold mb-2">95%</div>
-              <div className="text-blue-100 text-lg">Completion Rate</div>
+            <div className="p-6">
+              <div className="flex items-center justify-center mb-3">
+                <TrendingUp className="text-purple-600" size={32} />
+              </div>
+              <div className="text-4xl font-bold text-slate-800 mb-2">95%</div>
+              <div className="text-slate-600">Success Rate</div>
             </div>
           </div>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-6">
+      <section className="py-20 px-6 bg-gradient-to-r from-blue-600 to-teal-600">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-4xl font-bold mb-6 text-slate-900" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>
-            Ready to Start Learning?
+          <h2 className="text-4xl font-bold text-white mb-6">
+            Ready to Transform Your Learning?
           </h2>
-          <p className="text-xl text-slate-600 mb-10">
-            Join thousands of learners mastering coding and AI tools on DexNote.
+          <p className="text-xl text-white/90 mb-8">
+            Join thousands of students who are already achieving more with DexNote.
           </p>
           <Link to="/signup">
-            <Button size="lg" className="bg-gradient-to-r from-blue-600 to-teal-600 text-white hover:from-blue-700 hover:to-teal-700 text-lg px-10 py-6">
-              Sign Up Now
+            <Button size="lg" className="bg-white text-blue-600 hover:bg-slate-100 shadow-lg hover:shadow-xl transition-all">
+              Start Your Journey Today
             </Button>
           </Link>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-slate-900 text-white py-12 px-6">
+      <footer className="py-12 px-6 bg-slate-900 text-white">
         <div className="max-w-7xl mx-auto text-center">
           <div className="text-2xl font-bold mb-4 bg-gradient-to-r from-blue-400 to-teal-400 bg-clip-text text-transparent">
             DexNote
           </div>
-          <p className="text-slate-400 mb-6">Empowering learners worldwide with cutting-edge education.</p>
-          <div className="flex justify-center gap-6 text-sm text-slate-400">
+          <p className="text-slate-400 mb-6">
+            Empowering students with intelligent learning tools.
+          </p>
+          <div className="flex gap-6 justify-center text-slate-400">
             <a href="#" className="hover:text-white transition-colors">About</a>
-            <a href="#" className="hover:text-white transition-colors">Contact</a>
             <a href="#" className="hover:text-white transition-colors">Privacy</a>
             <a href="#" className="hover:text-white transition-colors">Terms</a>
+            <a href="#" className="hover:text-white transition-colors">Contact</a>
+          </div>
+          <div className="mt-8 text-slate-500 text-sm">
+            © 2024 DexNote. All rights reserved.
           </div>
         </div>
       </footer>
