@@ -40,6 +40,10 @@ jobs:
         env:
           CI: false
       
+      - name: Copy .nojekyll to build directory
+        run: |
+          cp .nojekyll frontend/build/
+      
       - name: Setup Pages
         uses: actions/configure-pages@v4
       
