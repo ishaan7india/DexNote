@@ -70,20 +70,43 @@ const CourseDetailPage = () => {
       return;
     }
 
+    // Check if course requires terms acceptance
+    if (course.requires_terms) {
+      setShowTermsDialog(true);
+      return;
+    }
+
+    // Proceed with enrollment
+    await enrollInCourse(false);
+  };
+
+  const enrollInCourse = async (withTerms = false) => {
+    setEnrolling(true);
     try {
       await axios.post(
         `${API}/enrollments`,
-        { course_id: id },
+        { 
+          course_id: id,
+          terms_accepted: withTerms
+        },
         { headers: { Authorization: `Bearer ${token}` } }
       );
       toast.success('Enrolled successfully!');
+      setShowTermsDialog(false);
+      setTermsAccepted(false);
       fetchCourseData();
     } catch (error) {
       if (error.response?.status === 400) {
-        toast.info('Already enrolled in this course');
+        if (error.response.data.detail.includes('Terms')) {
+          toast.error('You must accept the terms and conditions');
+        } else {
+          toast.info('Already enrolled in this course');
+        }
       } else {
         toast.error('Failed to enroll');
       }
+    } finally {
+      setEnrolling(false);
     }
   };
 
