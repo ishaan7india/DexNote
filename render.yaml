@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: dexnote-backend
+    env: python
+    region: oregon
+    buildCommand: "pip install -r backend/requirements.txt"
+    startCommand: "bash backend/start.sh"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: PORT
+        value: 10000
