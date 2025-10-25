@@ -303,6 +303,83 @@ const CourseDetailPage = () => {
           </div>
         </div>
       </div>
+
+      {/* Terms and Conditions Dialog */}
+      <AlertDialog open={showTermsDialog} onOpenChange={setShowTermsDialog}>
+        <AlertDialogContent className="max-w-2xl" data-testid="terms-dialog">
+          <AlertDialogHeader>
+            <div className="flex items-center gap-3 mb-2">
+              <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center">
+                <AlertTriangle className="w-6 h-6 text-orange-600" />
+              </div>
+              <AlertDialogTitle className="text-2xl">Terms and Conditions</AlertDialogTitle>
+            </div>
+            <AlertDialogDescription className="text-base space-y-4 pt-4">
+              <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                <h4 className="font-bold text-red-900 mb-2">⚠️ IMPORTANT LEGAL NOTICE</h4>
+                <p className="text-red-800">
+                  This Cybersecurity & Ethical Hacking course is provided for EDUCATIONAL and DEFENSIVE SECURITY purposes ONLY.
+                </p>
+              </div>
+
+              <div className="space-y-3 text-slate-700">
+                <p className="font-semibold">By enrolling in this course, you acknowledge and agree that:</p>
+                
+                <ul className="list-disc pl-6 space-y-2">
+                  <li>
+                    <strong>Unauthorized access to computer systems is illegal</strong> in most countries and may result in criminal prosecution, imprisonment, and/or substantial fines.
+                  </li>
+                  <li>
+                    <strong>All techniques taught must only be used with explicit written permission</strong> from system owners or in authorized testing environments.
+                  </li>
+                  <li>
+                    <strong>You are solely responsible</strong> for how you use the knowledge gained from this course.
+                  </li>
+                  <li>
+                    <strong>DexNote and its instructors are not liable</strong> for any misuse of the skills learned or any legal consequences arising from your actions.
+                  </li>
+                  <li>
+                    <strong>Violation of computer security laws</strong> can result in criminal charges under laws such as the Computer Fraud and Abuse Act (CFAA) in the USA, Computer Misuse Act in the UK, and equivalent laws in other jurisdictions.
+                  </li>
+                  <li>
+                    <strong>Always practice ethical hacking</strong>: obtain permission, respect privacy, report vulnerabilities responsibly, and never cause harm.
+                  </li>
+                </ul>
+
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-4">
+                  <p className="text-blue-900 font-medium">
+                    This course is designed to help you build a career in cybersecurity, protect systems, and understand security from a defender's perspective.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3 pt-4 border-t">
+                <Checkbox 
+                  id="terms-accept" 
+                  checked={termsAccepted}
+                  onCheckedChange={setTermsAccepted}
+                  data-testid="terms-checkbox"
+                  className="mt-1"
+                />
+                <label htmlFor="terms-accept" className="text-sm font-medium leading-relaxed cursor-pointer">
+                  I have read and understand the terms and conditions. I agree to use the knowledge from this course only for legal, ethical, and authorized purposes. I understand that misuse may result in criminal prosecution according to the laws of my country.
+                </label>
+              </div>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel data-testid="terms-cancel-btn">Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => enrollInCourse(true)}
+              disabled={!termsAccepted || enrolling}
+              className="bg-gradient-to-r from-blue-600 to-teal-600 text-white hover:from-blue-700 hover:to-teal-700"
+              data-testid="terms-accept-btn"
+            >
+              {enrolling ? 'Enrolling...' : 'Accept & Enroll'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
