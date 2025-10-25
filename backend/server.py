@@ -59,11 +59,12 @@ class Course(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     title: str
     description: str
-    category: str  # "coding" or "ai-tools"
+    category: str  # "coding" or "ai-tools" or "mathematics"
     difficulty: str  # "beginner", "intermediate", "advanced"
     duration: str  # "4 weeks", "8 weeks", etc.
     modules_count: int
     thumbnail: str = ""
+    requires_terms: bool = False  # For courses requiring T&C acceptance
     created_at: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
 class Module(BaseModel):
