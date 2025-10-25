@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Clock, BookOpen, FileText, CheckCircle, Home, Book, Presentation } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Clock, BookOpen, ArrowLeft, Sparkles } from 'lucide-react';
 import { toast } from 'sonner';
 
 // Hardcoded courses with PDF links
@@ -36,233 +37,213 @@ const HARDCODED_COURSES = [
       'Learn Python programming with focus on data analysis, pandas, and numpy.',
     category: 'coding',
     difficulty: 'Intermediate',
-    duration: '5 weeks',
+    duration: '8 weeks',
+    modules_count: 16,
+    pdfUrl: 'https://example.com/python-data-science.pdf',
+  },
+  {
+    id: 4,
+    title: 'Machine Learning Basics',
+    description:
+      'Get started with machine learning algorithms and techniques.',
+    category: 'ai',
+    difficulty: 'Intermediate',
+    duration: '10 weeks',
+    modules_count: 20,
+    pdfUrl: 'https://example.com/ml-basics.pdf',
+  },
+  {
+    id: 5,
+    title: 'Linear Algebra',
+    description:
+      'Master the mathematical foundations essential for data science and ML.',
+    category: 'mathematics',
+    difficulty: 'Intermediate',
+    duration: '6 weeks',
     modules_count: 10,
-    pdfUrl: 'https://example.com/python-ds.pdf',
+    pdfUrl: 'https://example.com/linear-algebra.pdf',
+  },
+  {
+    id: 6,
+    title: 'Deep Learning Fundamentals',
+    description:
+      'Dive into neural networks, CNNs, RNNs, and modern deep learning architectures.',
+    category: 'ai',
+    difficulty: 'Advanced',
+    duration: '12 weeks',
+    modules_count: 24,
+    pdfUrl: 'https://example.com/deep-learning.pdf',
   },
 ];
 
-// Helpers for auth state in localStorage
-const isSignedUp = () => localStorage.getItem('dexnote_signed_up') === 'true';
-const isLoggedIn = () => localStorage.getItem('dexnote_logged_in') === 'true';
-
-// Navigation component with links to Courses, Notes, and Whiteboard
-function Navigation() {
-  return (
-    <nav className="bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-gray-200 py-4 px-6 mb-8 shadow-sm">
-      <div className="max-w-7xl mx-auto flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-gray-800">DexNote</h2>
-        <div className="flex gap-6">
-          <Link
-            to="/courses"
-            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors font-medium shadow-sm"
-          >
-            <Book size={18} />
-            Courses
-          </Link>
-          <Link
-            to="/notes"
-            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white text-gray-700 hover:bg-gray-50 border border-gray-300 transition-colors font-medium shadow-sm"
-          >
-            <FileText size={18} />
-            Notes
-          </Link>
-          <Link
-            to="/whiteboard"
-            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white text-gray-700 hover:bg-gray-50 border border-gray-300 transition-colors font-medium shadow-sm"
-          >
-            <Presentation size={18} />
-            Whiteboard
-          </Link>
-        </div>
-      </div>
-    </nav>
-  );
-}
-
-function CourseCard({ course, canAccess, onMarkComplete }) {
-  const handleOpenPdf = () => {
-    if (!canAccess) return;
-    window.open(course.pdfUrl, '_blank', 'noopener');
+const CourseCard = ({ course }) => {
+  const getCategoryColor = (category) => {
+    const colors = {
+      coding: 'from-blue-600 to-blue-700',
+      ai: 'from-purple-600 to-purple-700',
+      mathematics: 'from-teal-600 to-teal-700',
+    };
+    return colors[category] || 'from-gray-600 to-gray-700';
   };
 
-  const handleComplete = () => {
-    if (!canAccess) return;
-    onMarkComplete(course.id);
+  const getCategoryBadgeColor = (category) => {
+    const colors = {
+      coding: 'bg-blue-100 text-blue-700',
+      ai: 'bg-purple-100 text-purple-700',
+      mathematics: 'bg-teal-100 text-teal-700',
+    };
+    return colors[category] || 'bg-gray-100 text-gray-700';
   };
 
   return (
-    <div
-      className="bg-white border border-gray-200 rounded-xl p-6 space-y-4 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
-      data-testid={`course-card-${course.id}`}
-    >
-      <div className="flex items-center gap-3">
-        <div className="p-2 bg-blue-100 rounded-lg">
-          <BookOpen size={24} className="text-blue-600" />
+    <Link to={`/courses/${course.id}`} className="group">
+      <div className="bg-white/60 backdrop-blur-sm rounded-2xl border border-slate-200 p-6 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+        <div className="flex items-start justify-between mb-4">
+          <div className={`w-16 h-16 bg-gradient-to-br ${getCategoryColor(course.category)} rounded-2xl flex items-center justify-center`}>
+            <BookOpen className="text-white" size={32} />
+          </div>
+          <Badge className={getCategoryBadgeColor(course.category)}>
+            {course.category.charAt(0).toUpperCase() + course.category.slice(1)}
+          </Badge>
         </div>
-        <h3 className="font-bold text-xl text-gray-800">{course.title}</h3>
-      </div>
-      <p className="text-sm text-gray-600 leading-relaxed">{course.description}</p>
-      <div className="flex items-center gap-4 text-sm text-gray-500">
-        <span className="inline-flex items-center gap-1">
-          <Clock size={16} className="text-blue-500" /> {course.duration}
-        </span>
-        <span className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-semibold">
-          {course.difficulty}
-        </span>
-        <span className="text-gray-600">{course.modules_count} modules</span>
-      </div>
-      <div className="flex gap-3 pt-2">
-        <Button
-          data-testid={`open-pdf-${course.id}`}
-          onClick={handleOpenPdf}
-          size="sm"
-          className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-medium shadow-sm"
-        >
-          <FileText className="mr-2" size={16} /> View PDF
-        </Button>
-        <Button
-          data-testid={`complete-${course.id}`}
-          onClick={handleComplete}
-          size="sm"
-          variant="secondary"
-          className="flex-1 border-2 border-green-500 text-green-700 hover:bg-green-50 font-medium"
-        >
-          <CheckCircle className="mr-2" size={16} /> Mark Complete
+        <h3 className="text-xl font-bold text-slate-900 mb-2 group-hover:text-blue-600 transition-colors">
+          {course.title}
+        </h3>
+        <p className="text-slate-600 text-sm mb-4 line-clamp-2">
+          {course.description}
+        </p>
+        <div className="space-y-2 mb-4">
+          <div className="flex items-center gap-2 text-sm text-slate-600">
+            <Sparkles className="text-blue-600" size={16} />
+            <span>{course.modules_count} modules</span>
+          </div>
+          <div className="flex items-center gap-2 text-sm text-slate-600">
+            <Clock className="text-teal-600" size={16} />
+            <span>{course.duration}</span>
+          </div>
+          <div className="flex items-center gap-2 text-sm text-slate-600">
+            <Sparkles className="text-purple-600" size={16} />
+            <span>{course.difficulty}</span>
+          </div>
+        </div>
+        <Button className={`w-full bg-gradient-to-r ${getCategoryColor(course.category)} text-white hover:opacity-90`}>
+          View Course
         </Button>
       </div>
-    </div>
+    </Link>
   );
-}
+};
 
-export default function CoursesPage() {
+const CoursesPage = () => {
   const navigate = useNavigate();
-  const [authed, setAuthed] = useState(false);
-  const [completed, setCompleted] = useState(() => {
-    try {
-      return JSON.parse(localStorage.getItem('dexnote_completed') || '{}');
-    } catch {
-      return {};
-    }
-  });
+  const [selectedCategory, setSelectedCategory] = useState('all');
 
-  useEffect(() => {
-    setAuthed(isSignedUp() && isLoggedIn());
-  }, []);
-
-  const filteredCourses = (category) =>
-    category === 'all'
+  const filteredCourses =
+    selectedCategory === 'all'
       ? HARDCODED_COURSES
-      : HARDCODED_COURSES.filter((c) => c.category === category);
-
-  const onMarkComplete = (id) => {
-    const updated = { ...completed, [id]: true };
-    setCompleted(updated);
-    localStorage.setItem('dexnote_completed', JSON.stringify(updated));
-    toast.success('Marked as complete');
-  };
+      : HARDCODED_COURSES.filter((course) => course.category === selectedCategory);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
-      <Navigation />
-      <div className="max-w-7xl mx-auto py-12 px-6">
-        <div className="mb-10 text-center">
-          <h1 className="text-5xl font-bold text-gray-900 mb-3">Explore Courses</h1>
-          <p className="text-lg text-gray-600">Browse available courses and track your progress</p>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-teal-50">
+      {/* Navigation */}
+      <nav className="fixed top-0 w-full backdrop-blur-md bg-white/70 border-b border-slate-200 z-50">
+        <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+          <button
+            onClick={() => navigate('/dashboard')}
+            className="flex items-center gap-2 text-slate-700 hover:text-blue-600 transition-colors"
+          >
+            <ArrowLeft size={20} />
+            <span className="font-semibold">Back to Dashboard</span>
+          </button>
+          <div className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-teal-600 bg-clip-text text-transparent">
+            DexNote Courses
+          </div>
         </div>
-        <Tabs className="w-full" defaultValue="all">
-          <TabsList className="mb-10 flex justify-center bg-white shadow-md rounded-xl p-2" data-testid="course-tabs">
+      </nav>
+
+      {/* Header Section */}
+      <div className="pt-24 pb-12 px-6">
+        <div className="max-w-7xl mx-auto text-center">
+          <div className="inline-block px-6 py-3 bg-gradient-to-r from-blue-600 via-teal-600 to-purple-600 rounded-2xl mb-6">
+            <h1 className="text-4xl md:text-5xl font-bold text-white">
+              Explore Our Courses
+            </h1>
+          </div>
+          <p className="text-xl text-slate-600 max-w-2xl mx-auto">
+            Discover a wide range of courses designed to help you master new skills and achieve your learning goals.
+          </p>
+        </div>
+      </div>
+
+      {/* Courses Section */}
+      <div className="max-w-7xl mx-auto px-6 pb-12">
+        <Tabs defaultValue="all" className="w-full">
+          <TabsList className="mb-8 flex justify-center bg-white/60 backdrop-blur-sm p-2 rounded-2xl border border-slate-200">
             <TabsTrigger
-              data-testid="tab-all"
               value="all"
-              className="px-6 py-3 text-base font-semibold rounded-lg data-[state=active]:bg-blue-600 data-[state=active]:text-white transition-all"
+              onClick={() => setSelectedCategory('all')}
+              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-teal-600 data-[state=active]:text-white"
             >
               All Courses
             </TabsTrigger>
             <TabsTrigger
-              data-testid="tab-coding"
               value="coding"
-              className="px-6 py-3 text-base font-semibold rounded-lg data-[state=active]:bg-blue-600 data-[state=active]:text-white transition-all"
+              onClick={() => setSelectedCategory('coding')}
+              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-blue-700 data-[state=active]:text-white"
             >
               Coding
             </TabsTrigger>
             <TabsTrigger
-              data-testid="tab-ai-tools"
-              value="ai-tools"
-              className="px-6 py-3 text-base font-semibold rounded-lg data-[state=active]:bg-blue-600 data-[state=active]:text-white transition-all"
+              value="ai"
+              onClick={() => setSelectedCategory('ai')}
+              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-purple-700 data-[state=active]:text-white"
             >
               AI Tools
             </TabsTrigger>
             <TabsTrigger
-              data-testid="tab-mathematics"
               value="mathematics"
-              className="px-6 py-3 text-base font-semibold rounded-lg data-[state=active]:bg-blue-600 data-[state=active]:text-white transition-all"
+              onClick={() => setSelectedCategory('mathematics')}
+              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-teal-600 data-[state=active]:to-teal-700 data-[state=active]:text-white"
             >
               Mathematics
             </TabsTrigger>
           </TabsList>
-          <TabsContent value="all">
-            <div
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto"
-              data-testid="all-courses-grid"
-            >
-              {filteredCourses('all').map((course) => (
-                <CourseCard
-                  key={course.id}
-                  course={course}
-                  canAccess={authed}
-                  onMarkComplete={onMarkComplete}
-                />
+
+          <TabsContent value={selectedCategory} className="mt-0">
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredCourses.map((course) => (
+                <CourseCard key={course.id} course={course} />
               ))}
             </div>
-          </TabsContent>
-          <TabsContent value="coding">
-            <div
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto"
-              data-testid="coding-courses-grid"
-            >
-              {filteredCourses('coding').map((course) => (
-                <CourseCard
-                  key={course.id}
-                  course={course}
-                  canAccess={authed}
-                  onMarkComplete={onMarkComplete}
-                />
-              ))}
-            </div>
-          </TabsContent>
-          <TabsContent value="ai-tools">
-            <div
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto"
-              data-testid="ai-tools-courses-grid"
-            >
-              {filteredCourses('ai-tools').map((course) => (
-                <CourseCard
-                  key={course.id}
-                  course={course}
-                  canAccess={authed}
-                  onMarkComplete={onMarkComplete}
-                />
-              ))}
-            </div>
-          </TabsContent>
-          <TabsContent value="mathematics">
-            <div
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto"
-              data-testid="mathematics-courses-grid"
-            >
-              {filteredCourses('mathematics').map((course) => (
-                <CourseCard
-                  key={course.id}
-                  course={course}
-                  canAccess={authed}
-                  onMarkComplete={onMarkComplete}
-                />
-              ))}
-            </div>
+            {filteredCourses.length === 0 && (
+              <div className="text-center py-12">
+                <p className="text-slate-600 text-lg">No courses found in this category.</p>
+              </div>
+            )}
           </TabsContent>
         </Tabs>
       </div>
+
+      {/* CTA Section */}
+      <div className="max-w-7xl mx-auto px-6 pb-12">
+        <div className="bg-gradient-to-r from-blue-600 to-teal-600 rounded-2xl p-8 md:p-12 text-center">
+          <h2 className="text-3xl font-bold text-white mb-4">
+            Can't find what you're looking for?
+          </h2>
+          <p className="text-white/90 text-lg mb-6">
+            We're constantly adding new courses. Check back soon or request a course topic!
+          </p>
+          <Button
+            onClick={() => navigate('/dashboard')}
+            size="lg"
+            className="bg-white text-blue-600 hover:bg-slate-100"
+          >
+            Back to Dashboard
+          </Button>
+        </div>
+      </div>
     </div>
   );
-}
+};
+
+export default CoursesPage;
