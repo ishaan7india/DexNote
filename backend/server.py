@@ -9,7 +9,7 @@ from pathlib import Path
 from pydantic import BaseModel, Field, ConfigDict, EmailStr
 from typing import List, Optional
 import uuid
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timezone, timedelta, date
 from passlib.context import CryptContext
 import jwt
 
@@ -33,7 +33,6 @@ ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24 * 7  # 7 days
 
 # ============= MODELS =============
-
 class UserSignup(BaseModel):
     username: str
     email: EmailStr
@@ -109,7 +108,6 @@ class ProfileUpdate(BaseModel):
     email: Optional[EmailStr] = None
 
 # ============= HELPER FUNCTIONS =============
-
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
 
@@ -140,8 +138,27 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(s
     except jwt.JWTError:
         raise HTTPException(status_code=401, detail="Invalid token")
 
-# ============= AUTH ROUTES =============
+# Streak utility
+def _today_utc_date_str() -> str:
+    return datetime.now(timezone.utc).date().isoformat()
 
+def _calculate_new_streak(prev_date_str: Optional[str]) -> int:
+    # Returns new streak based on previous login date
+    today = datetime.now(timezone.utc).date()
+    if not prev_date_str:
+        return 1
+    try:
+        prev_date = datetime.fromisoformat(prev_date_str).date()
+    except Exception:
+        return 1
+    if prev_date == today:
+        return None  # no change
+    if prev_date == (today - timedelta(days=1)):
+        return "INC"  # increment
+    # older than yesterday -> reset to 1
+    return 1
+
+# ============= AUTH ROUTES =============
 @api_router.post("/auth/signup", response_model=UserResponse)
 async def signup(user_data: UserSignup):
     # Check if user exists
@@ -179,6 +196,20 @@ async def login(login_data: UserLogin):
     if not verify_password(login_data.password, user["password_hash"]):
         raise HTTPException(status_code=401, detail="Invalid email or password")
     
+    # Streak update logic
+    prev_last_login = user.get("last_login_date")
+    new_streak = _calculate_new_streak(prev_last_login)
+    update_fields = {"last_login_date": _today_utc_date_str()}
+    if new_streak == "INC":
+        update_fields["streak_count"] = int(user.get("streak_count", 0)) + 1
+    elif new_streak is None:
+        update_fields["streak_count"] = int(user.get("streak_count", 0))
+    else:
+        update_fields["streak_count"] = 1
+    await db.users.update_one({"id": user["id"]}, {"$set": update_fields})
+    # reflect latest values for response
+    user.update(update_fields)
+
     user_obj = User(**user)
     token = create_access_token({"sub": user_obj.id})
     
@@ -188,8 +219,15 @@ async def login(login_data: UserLogin):
 async def get_me(current_user: User = Depends(get_current_user)):
     return current_user
 
-# ============= COURSE ROUTES =============
+# New streak endpoint
+@api_router.get("/streak")
+async def get_streak(current_user: User = Depends(get_current_user)):
+    return {
+        "streak_count": current_user.streak_count,
+        "last_login_date": current_user.last_login_date
+    }
 
+# ============= COURSE ROUTES =============
 @api_router.get("/courses", response_model=List[Course])
 async def get_courses(category: Optional[str] = None):
     query = {}
@@ -212,7 +250,6 @@ async def get_course_modules(course_id: str):
     return modules
 
 # ============= ENROLLMENT ROUTES =============
-
 @api_router.post("/enrollments", response_model=Enrollment)
 async def enroll_course(enrollment_data: EnrollmentRequest, current_user: User = Depends(get_current_user)):
     # Check if already enrolled
@@ -258,7 +295,6 @@ async def get_my_enrollments(current_user: User = Depends(get_current_user)):
     return result
 
 # ============= PROGRESS ROUTES =============
-
 @api_router.put("/progress")
 async def update_progress(progress_data: ProgressUpdate, current_user: User = Depends(get_current_user)):
     # Find or create progress record
@@ -313,7 +349,6 @@ async def get_course_progress(course_id: str, current_user: User = Depends(get_c
     return progress_records
 
 # ============= PROFILE ROUTES =============
-
 @api_router.get("/profile", response_model=User)
 async def get_profile(current_user: User = Depends(get_current_user)):
     return current_user
@@ -353,7 +388,6 @@ async def update_profile(profile_data: ProfileUpdate, current_user: User = Depen
 
 # Include router
 app.include_router(api_router)
-
 app.add_middleware(
     CORSMiddleware,
     allow_credentials=True,
