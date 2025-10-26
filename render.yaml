@@ -12,3 +12,5 @@ services:
         value: 10000
       - key: OPENAI_API_KEY
         sync: false
+      - key: MONGO_URI
+        value: YOUR_PRODUCTION_MONGODB_URI
