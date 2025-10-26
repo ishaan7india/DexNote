@@ -104,17 +104,17 @@ const CoursesPage = () => {
 
   const getDifficultyColor = (difficulty) => {
     const colors = {
-      Beginner: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
-      Intermediate: 'bg-blue-500/20 text-blue-300 border-blue-500/30',
-      Advanced: 'bg-purple-500/20 text-purple-300 border-purple-500/30',
+      Beginner: 'bg-green-100 text-green-700 border-green-300',
+      Intermediate: 'bg-blue-100 text-blue-700 border-blue-300',
+      Advanced: 'bg-purple-100 text-purple-700 border-purple-300',
     };
-    return colors[difficulty] || 'bg-gray-500/20 text-gray-300 border-gray-500/30';
+    return colors[difficulty] || 'bg-gray-100 text-gray-700 border-gray-300';
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-slate-900 to-black text-white">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50 text-gray-900">
       {/* Header */}
-      <div className="border-b border-gray-800/50 bg-black/30 backdrop-blur-xl sticky top-0 z-50">
+      <div className="border-b border-gray-200 bg-white/80 backdrop-blur-xl sticky top-0 z-50 shadow-sm">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between py-4">
             <div className="flex items-center gap-4">
@@ -122,16 +122,16 @@ const CoursesPage = () => {
                 variant="ghost"
                 size="sm"
                 onClick={() => navigate('/dashboard')}
-                className="hover:bg-white/10"
+                className="hover:bg-gray-100"
               >
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 Back
               </Button>
               <div>
-                <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
                   Course Library
                 </h1>
-                <p className="text-sm text-gray-400">Expand your knowledge</p>
+                <p className="text-sm text-gray-600">Expand your knowledge</p>
               </div>
             </div>
           </div>
@@ -146,17 +146,29 @@ const CoursesPage = () => {
           className="w-full"
           onValueChange={(value) => setSelectedCategory(value)}
         >
-          <TabsList className="bg-gray-800/50 border border-gray-700/50 backdrop-blur-sm mb-8">
-            <TabsTrigger value="all" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-purple-600">
+          <TabsList className="bg-gray-100 border border-gray-200 backdrop-blur-sm mb-8">
+            <TabsTrigger
+              value="all"
+              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-purple-600 data-[state=active]:text-white"
+            >
               All Courses
             </TabsTrigger>
-            <TabsTrigger value="coding" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-purple-600">
+            <TabsTrigger
+              value="coding"
+              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-purple-600 data-[state=active]:text-white"
+            >
               Coding
             </TabsTrigger>
-            <TabsTrigger value="data" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-purple-600">
+            <TabsTrigger
+              value="data"
+              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-purple-600 data-[state=active]:text-white"
+            >
               Data Science
             </TabsTrigger>
-            <TabsTrigger value="design" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-purple-600">
+            <TabsTrigger
+              value="design"
+              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-purple-600 data-[state=active]:text-white"
+            >
               Design
             </TabsTrigger>
           </TabsList>
@@ -171,34 +183,36 @@ const CoursesPage = () => {
                 {filteredCourses.map((course) => (
                   <div
                     key={course.id}
-                    className="group relative bg-gradient-to-br from-gray-800/50 via-gray-800/30 to-gray-900/50 border border-gray-700/50 rounded-xl p-6 hover:border-blue-500/50 transition-all duration-300 hover:shadow-2xl hover:shadow-blue-500/20 cursor-pointer backdrop-blur-sm"
+                    className="group relative bg-white border border-gray-200 rounded-xl p-6 hover:border-blue-400 hover:shadow-xl transition-all duration-300 cursor-pointer"
                     onClick={() => handleCourseClick(course)}
                   >
                     {/* Gradient Overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-blue-600/0 via-purple-600/0 to-pink-600/0 group-hover:from-blue-600/5 group-hover:via-purple-600/5 group-hover:to-pink-600/5 rounded-xl transition-all duration-300"></div>
+                    <div className="absolute inset-0 bg-gradient-to-br from-blue-50/0 via-purple-50/0 to-pink-50/0 group-hover:from-blue-50/30 group-hover:via-purple-50/30 group-hover:to-pink-50/30 rounded-xl transition-all duration-300"></div>
 
                     <div className="relative z-10">
                       {/* Header */}
                       <div className="flex items-start justify-between mb-4">
-                        <div className="p-3 bg-gradient-to-br from-blue-600/20 to-purple-600/20 rounded-lg border border-blue-500/30">
-                          <BookOpen className="h-6 w-6 text-blue-400" />
+                        <div className="p-3 bg-gradient-to-br from-blue-100 to-purple-100 rounded-lg border border-blue-200">
+                          <BookOpen className="h-6 w-6 text-blue-600" />
                         </div>
-                        <Badge className={`${getDifficultyColor(course.difficulty)} border`}>
+                        <Badge
+                          className={`${getDifficultyColor(course.difficulty)} border`}
+                        >
                           {course.difficulty}
                         </Badge>
                       </div>
 
                       {/* Content */}
-                      <h3 className="text-xl font-bold mb-2 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent group-hover:from-blue-400 group-hover:to-purple-400 transition-all duration-300">
+                      <h3 className="text-xl font-bold mb-2 text-gray-900 group-hover:text-blue-600 transition-all duration-300">
                         {course.title}
                       </h3>
-                      <p className="text-gray-400 text-sm mb-4 line-clamp-2">
+                      <p className="text-gray-600 text-sm mb-4 line-clamp-2">
                         {course.description}
                       </p>
 
                       {/* Footer */}
-                      <div className="flex items-center justify-between pt-4 border-t border-gray-700/50">
-                        <div className="flex items-center gap-4 text-sm text-gray-400">
+                      <div className="flex items-center justify-between pt-4 border-t border-gray-200">
+                        <div className="flex items-center gap-4 text-sm text-gray-600">
                           <div className="flex items-center gap-1">
                             <Clock className="h-4 w-4" />
                             <span>{course.duration}</span>
@@ -213,17 +227,17 @@ const CoursesPage = () => {
 
                     {/* Hover Effect Border */}
                     <div className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
-                      <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-600/20 via-purple-600/20 to-pink-600/20 blur-xl"></div>
+                      <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-200/20 via-purple-200/20 to-pink-200/20 blur-xl"></div>
                     </div>
                   </div>
                 ))}
               </div>
             ) : (
               <div className="text-center py-20">
-                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-800/50 border border-gray-700/50 mb-4">
-                  <BookOpen className="h-8 w-8 text-gray-500" />
+                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 border border-gray-200 mb-4">
+                  <BookOpen className="h-8 w-8 text-gray-400" />
                 </div>
-                <h3 className="text-xl font-semibold mb-2 text-gray-300">No courses found</h3>
+                <h3 className="text-xl font-semibold mb-2 text-gray-700">No courses found</h3>
                 <p className="text-gray-500">Try selecting a different category</p>
               </div>
             )}
