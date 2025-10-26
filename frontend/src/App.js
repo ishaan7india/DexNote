@@ -107,7 +107,7 @@ function App() {
   }
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, token }}>
+    <AuthContext.Provider value={{ user, token, login, logout }}>
       <ThemeContext.Provider value={{ theme, toggleTheme }}>
         <div className="min-h-screen bg-background text-foreground">
           <HashRouter>
@@ -115,89 +115,102 @@ function App() {
               <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between items-center h-16">
                   <Link to="/" className="text-2xl font-bold text-primary">DexNote</Link>
-                  <Dialog>
-                    <DialogTrigger asChild>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="gap-2"
-                        aria-label="Open Math Solver"
-                      >
-                        <Calculator className="h-4 w-4" />
-                        Math Solver
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent className="sm:max-w-[600px]">
-                      <DialogHeader>
-                        <DialogTitle>Math Problem Solver</DialogTitle>
-                        <DialogDescription>
-                          Enter your math question below and get step-by-step solutions.
-                        </DialogDescription>
-                      </DialogHeader>
-                      <div className="space-y-4 py-4">
-                        <Textarea
-                          placeholder="Enter your math problem (e.g., 2x + 5 = 15)"
-                          value={mathQuestion}
-                          onChange={(e) => setMathQuestion(e.target.value)}
-                          className="min-h-[100px]"
-                        />
+                  
+                  <div className="flex items-center gap-2 ml-auto">
+                    <Dialog>
+                      <DialogTrigger asChild>
                         <Button 
-                          onClick={solveMath} 
-                          disabled={mathLoading || !mathQuestion.trim()}
-                          className="w-full"
+                          variant="outline"
+                          size="sm"
+                          className="gap-2"
+                          aria-label="Open Math Solver"
                         >
-                          {mathLoading ? 'Solving...' : 'Solve'}
+                          <Calculator className="h-4 w-4" />
+                          Math Solver
                         </Button>
-                        
-                        {mathSolution && (
-                          <div className="mt-4 p-4 bg-secondary rounded-lg">
-                            {mathSolution.error ? (
-                              <p className="text-destructive">{mathSolution.error}</p>
-                            ) : (
-                              <div className="space-y-2">
-                                <h3 className="font-semibold">Solution:</h3>
-                                <div className="whitespace-pre-wrap">{mathSolution.solution || mathSolution.answer}</div>
-                                {mathSolution.steps && (
-                                  <div className="mt-2">
-                                    <h4 className="font-semibold">Steps:</h4>
-                                    <ol className="list-decimal list-inside space-y-1">
-                                      {mathSolution.steps.map((step, index) => (
-                                        <li key={index}>{step}</li>
-                                      ))}
-                                    </ol>
-                                  </div>
-                                )}
-                              </div>
-                            )}
-                          </div>
-                        )}
-                      </div>
-                    </DialogContent>
-                  </Dialog>
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    onClick={toggleTheme}
-                    className="gap-2"
-                    aria-label="Toggle theme"
-                  >
-                    {theme === 'light' ? (
-                      <Moon className="h-4 w-4" />
+                      </DialogTrigger>
+                      <DialogContent className="sm:max-w-[600px]">
+                        <DialogHeader>
+                          <DialogTitle>Math Problem Solver</DialogTitle>
+                          <DialogDescription>
+                            Enter your math question below and get step-by-step solutions.
+                          </DialogDescription>
+                        </DialogHeader>
+                        <div className="space-y-4 py-4">
+                          <Textarea
+                            placeholder="Enter your math problem (e.g., 2x + 5 = 15)"
+                            value={mathQuestion}
+                            onChange={(e) => setMathQuestion(e.target.value)}
+                            className="min-h-[100px]"
+                          />
+                          <Button 
+                            onClick={solveMath} 
+                            disabled={mathLoading || !mathQuestion.trim()}
+                            className="w-full"
+                          >
+                            {mathLoading ? 'Solving...' : 'Solve'}
+                          </Button>
+                          
+                          {mathSolution && (
+                            <div className="mt-4 p-4 bg-secondary rounded-lg">
+                              {mathSolution.error ? (
+                                <p className="text-destructive">{mathSolution.error}</p>
+                              ) : (
+                                <div className="space-y-2">
+                                  <h3 className="font-semibold">Solution:</h3>
+                                  <div className="whitespace-pre-wrap">{mathSolution.solution || mathSolution.answer}</div>
+                                  {mathSolution.steps && (
+                                    <div className="mt-2">
+                                      <h4 className="font-semibold">Steps:</h4>
+                                      <ol className="list-decimal list-inside space-y-1">
+                                        {mathSolution.steps.map((step, index) => (
+                                          <li key={index}>{step}</li>
+                                        ))}
+                                      </ol>
+                                    </div>
+                                  )}
+                                </div>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      </DialogContent>
+                    </Dialog>
+
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={toggleTheme}
+                      className="gap-2"
+                      aria-label="Toggle theme"
+                    >
+                      {theme === 'light' ? (
+                        <Moon className="h-4 w-4" />
+                      ) : (
+                        <Sun className="h-4 w-4" />
+                      )}
+                    </Button>
+
+                    {user ? (
+                      <>
+                        <Button variant="outline" size="sm" asChild>
+                          <Link to="/dashboard">Dashboard</Link>
+                        </Button>
+                        <Button variant="outline" size="sm" asChild>
+                          <Link to="/profile">Profile</Link>
+                        </Button>
+                      </>
                     ) : (
-                      <Sun className="h-4 w-4" />
+                      <>
+                        <Button variant="outline" size="sm" asChild>
+                          <Link to="/login">Login</Link>
+                        </Button>
+                        <Button variant="outline" size="sm" asChild>
+                          <Link to="/signup">Sign up</Link>
+                        </Button>
+                      </>
                     )}
-                  </Button>
-                  {user ? (
-                    <>
-                      <Link to="/dashboard">Dashboard</Link>
-                      <Link to="/profile">Profile</Link>
-                    </>
-                  ) : (
-                    <>
-                      <Link to="/login">Login</Link>
-                      <Link to="/signup">Sign up</Link>
-                    </>
-                  )}
+                  </div>
                 </div>
               </div>
             </nav>
