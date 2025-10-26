@@ -44,7 +44,7 @@ const Dashboard = () => {
         {/* Quick Access Section */}
         <div className="mb-12">
           <h2 className="text-2xl font-bold text-slate-900 mb-6">Quick Access</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Courses Card */}
             <Link
               to="/courses"
@@ -61,7 +61,7 @@ const Dashboard = () => {
               </p>
             </Link>
 
-            {/* Study Materials Card */}
+            {/* My Notes Card */}
             <Link
               to="/notes"
               className="bg-white rounded-2xl shadow-lg p-8 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2"
@@ -70,26 +70,10 @@ const Dashboard = () => {
                 <FileText className="w-8 h-8 text-white" />
               </div>
               <h3 className="text-xl font-semibold text-center mb-2 text-slate-800">
-                Study Materials
+                My Notes
               </h3>
               <p className="text-gray-600 text-center text-sm">
                 Access notes and resources
-              </p>
-            </Link>
-
-            {/* Roadmaps Card */}
-            <Link
-              to="/roadmaps"
-              className="bg-white rounded-2xl shadow-lg p-8 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2"
-            >
-              <div className="flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-r from-orange-500 to-red-500 mb-4 mx-auto">
-                <Layout className="w-8 h-8 text-white" />
-              </div>
-              <h3 className="text-xl font-semibold text-center mb-2 text-slate-800">
-                Learning Roadmaps
-              </h3>
-              <p className="text-gray-600 text-center text-sm">
-                Follow structured learning paths
               </p>
             </Link>
           </div>
