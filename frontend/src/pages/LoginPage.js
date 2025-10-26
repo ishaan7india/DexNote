@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 import { ArrowLeft } from 'lucide-react';
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'https://dexnote.onrender.com';
 const API = `${BACKEND_URL}/api`;
 
 const LoginPage = () => {
@@ -37,17 +37,24 @@ const LoginPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-teal-50 flex items-center justify-center px-6">
       <div className="w-full max-w-md">
-        <Link to="/" className="inline-flex items-center gap-2 text-slate-600 hover:text-slate-900 mb-8 transition-colors" data-testid="back-to-home-link">
+        <Link 
+          to="/" 
+          className="inline-flex items-center gap-2 text-slate-600 hover:text-slate-900 mb-8 transition-colors"
+          data-testid="back-to-home-link"
+        >
           <ArrowLeft className="w-4 h-4" />
           Back to home
         </Link>
         
         <div className="bg-white/80 backdrop-blur-md p-8 rounded-2xl border border-slate-200 shadow-xl">
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold mb-2 bg-gradient-to-r from-blue-600 to-teal-600 bg-clip-text text-transparent" style={{ fontFamily: 'Space Grotesk, sans-serif' }}>
+            <h1 
+              className="text-3xl font-bold mb-2 bg-gradient-to-r from-blue-600 to-teal-600 bg-clip-text text-transparent"
+              style={{ fontFamily: 'Space Grotesk, sans-serif' }}
+            >
               Welcome Back
             </h1>
-            <p className="text-slate-600">Sign in to continue your learning journey</p>
+            <p className="text-slate-600">Sign in to continue your learning</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
