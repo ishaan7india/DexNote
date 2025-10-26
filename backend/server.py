@@ -11,6 +11,7 @@ from pydantic import BaseModel, EmailStr, Field
 from passlib.context import CryptContext
 import jwt
 from openai import OpenAI
+import httpx
 
 # MongoDB setup
 client = AsyncIOMotorClient(os.environ.get('MONGO_URI', 'mongodb://localhost:27017'))
@@ -92,7 +93,7 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(s
         raise HTTPException(status_code=401, detail="Token has expired")
     except jwt.JWTError:
         raise HTTPException(status_code=401, detail="Could not validate credentials")
-    
+
     user = await db.users.find_one({"id": user_id}, {"_id": 0})
     if user is None:
         raise HTTPException(status_code=401, detail="User not found")
@@ -105,10 +106,10 @@ async def register(user: UserRegister):
     existing = await db.users.find_one({"$or": [{"username": user.username}, {"email": user.email}]}, {"_id": 0})
     if existing:
         raise HTTPException(status_code=400, detail="Username or email already registered")
-    
+
     user_id = str(uuid.uuid4())
     hashed_password = get_password_hash(user.password)
-    
+
     user_doc = {
         "id": user_id,
         "username": user.username,
@@ -117,10 +118,10 @@ async def register(user: UserRegister):
         "hashed_password": hashed_password,
         "created_at": datetime.utcnow()
     }
-    
+
     await db.users.insert_one(user_doc)
     token = create_access_token({"sub": user_id})
-    
+
     return {
         "token": token,
         "user": User(id=user_id, username=user.username, email=user.email, full_name=user.full_name)
@@ -128,20 +129,34 @@ async def register(user: UserRegister):
 
 @api_router.post("/auth/login")
 async def login(credentials: UserLogin):
-    user = await db.users.find_one({"username": credentials.username})
-    if not user or not verify_password(credentials.password, user["hashed_password"]):
-        raise HTTPException(status_code=401, detail="Incorrect username or password")
-    
-    token = create_access_token({"sub": user["id"]})
-    return {
-        "token": token,
-        "user": User(
-            id=user["id"],
-            username=user["username"],
-            email=user["email"],
-            full_name=user.get("full_name")
-        )
-    }
+    try:
+        logging.info("Login attempt for username=%s", credentials.username)
+        user = await db.users.find_one({"username": credentials.username})
+        if not user:
+            logging.warning("Login failed: user not found for username=%s", credentials.username)
+            raise HTTPException(status_code=401, detail="Incorrect username or password")
+        if not verify_password(credentials.password, user.get("hashed_password", "")):
+            logging.warning("Login failed: invalid password for username=%s", credentials.username)
+            raise HTTPException(status_code=401, detail="Incorrect username or password")
+
+        token = create_access_token({"sub": user["id"]})
+        logging.info("Login success for username=%s", credentials.username)
+        return {
+            "token": token,
+            "user": User(
+                id=user["id"],
+                username=user["username"],
+                email=user["email"],
+                full_name=user.get("full_name")
+            )
+        }
+    except HTTPException:
+        # Already meaningful; just re-raise after optional debug log
+        logging.debug("HTTPException during login for username=%s", credentials.username)
+        raise
+    except Exception as e:
+        logging.exception("Unexpected error during login for username=%s", credentials.username)
+        raise HTTPException(status_code=500, detail="Unexpected server error during login. Please try again.") from e
 
 @api_router.get("/auth/me", response_model=User)
 async def get_me(current_user: User = Depends(get_current_user)):
@@ -167,16 +182,16 @@ async def enroll_course(enrollment: EnrollmentCreate, current_user: User = Depen
     course = await db.courses.find_one({"id": enrollment.course_id}, {"_id": 0})
     if not course:
         raise HTTPException(status_code=404, detail="Course not found")
-    
+
     # Check if already enrolled
     existing = await db.enrollments.find_one({
         "user_id": current_user.id,
         "course_id": enrollment.course_id
     }, {"_id": 0})
-    
+
     if existing:
         raise HTTPException(status_code=400, detail="Already enrolled in this course")
-    
+
     enrollment_doc = {
         "id": str(uuid.uuid4()),
         "user_id": current_user.id,
@@ -184,19 +199,19 @@ async def enroll_course(enrollment: EnrollmentCreate, current_user: User = Depen
         "enrolled_at": datetime.utcnow(),
         "progress": 0
     }
-    
+
     await db.enrollments.insert_one(enrollment_doc)
     return {"message": "Enrolled successfully", "enrollment": enrollment_doc}
 
 @api_router.get("/enrollments")
 async def get_enrollments(current_user: User = Depends(get_current_user)):
     enrollments = await db.enrollments.find({"user_id": current_user.id}, {"_id": 0}).to_list(length=100)
-    
+
     # Populate course details
     for enrollment in enrollments:
         course = await db.courses.find_one({"id": enrollment["course_id"]}, {"_id": 0})
         enrollment["course"] = course
-    
+
     return enrollments
 
 # ============= PROGRESS ROUTES =============
@@ -206,15 +221,15 @@ async def update_progress(progress_data: ProgressUpdate, current_user: User = De
         "user_id": current_user.id,
         "course_id": progress_data.course_id
     }, {"_id": 0})
-    
+
     if not enrollment:
         raise HTTPException(status_code=404, detail="Enrollment not found")
-    
+
     await db.enrollments.update_one(
         {"user_id": current_user.id, "course_id": progress_data.course_id},
         {"$set": {"progress": progress_data.progress}}
     )
-    
+
     return {"message": "Progress updated", "progress": progress_data.progress}
 
 # ============= PROFILE ROUTES =============
@@ -266,13 +281,27 @@ async def solve_math(problem: MathProblem, current_user: User = Depends(get_curr
         )
         answer = completion.choices[0].message.content
         return {"solution": answer}
+    except httpx.ReadTimeout:
+        logging.warning("OpenAI request timed out for expression: %s", problem.expression)
+        raise HTTPException(status_code=504, detail="The AI service timed out. Please try again.")
+    except httpx.ConnectError:
+        logging.warning("OpenAI connection error for expression: %s", problem.expression)
+        raise HTTPException(status_code=503, detail="Unable to reach AI service. Please try later.")
     except Exception as e:
-        logging.exception("Math solver error")
-        raise HTTPException(status_code=500, detail=str(e))
+        # Attempt to map common OpenAI-style errors from client
+        msg = str(e) if str(e) else "Unknown error"
+        lowered = msg.lower()
+        if "rate limit" in lowered or "too many requests" in lowered or "429" in lowered:
+            logging.warning("OpenAI rate limit hit for expression: %s", problem.expression)
+            raise HTTPException(status_code=429, detail="AI rate limit reached. Please wait and try again.")
+        if "invalid api key" in lowered or "authentication" in lowered:
+            logging.error("OpenAI authentication error")
+            raise HTTPException(status_code=500, detail="AI service authentication error. Contact support.")
+        logging.exception("Math solver error: %s", msg)
+        raise HTTPException(status_code=500, detail="AI service error. Please try again later.")
 
 # Include router
 app.include_router(api_router)
-
 app.add_middleware(
     CORSMiddleware,
     allow_credentials=True,
@@ -285,7 +314,6 @@ logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
-
 logger = logging.getLogger(__name__)
 
 @app.on_event("shutdown")
