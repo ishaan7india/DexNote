@@ -44,134 +44,125 @@ function App() {
   useEffect(() => {
     if (token) {
       axios.get(`${API}/auth/me`, {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
       })
-      .then(response => {
-        setUser(response.data);
-        setLoading(false);
-      })
-      .catch(() => {
-        localStorage.removeItem('token');
-        setToken(null);
-        setLoading(false);
-      });
+        .then(response => {
+          setUser(response.data);
+          setLoading(false);
+        })
+        .catch(() => {
+          localStorage.removeItem('token');
+          setToken(null);
+          setLoading(false);
+        });
     } else {
       setLoading(false);
     }
   }, [token]);
 
-  // Apply theme to document
   useEffect(() => {
     document.documentElement.classList.toggle('dark', theme === 'dark');
     localStorage.setItem('theme', theme);
   }, [theme]);
 
-  const login = (newToken) => {
-    localStorage.setItem('token', newToken);
-    setToken(newToken);
+  const toggleTheme = () => {
+    setTheme(prevTheme => prevTheme === 'light' ? 'dark' : 'light');
+  };
+
+  const login = (userData, userToken) => {
+    setUser(userData);
+    setToken(userToken);
+    localStorage.setItem('token', userToken);
   };
 
   const logout = () => {
-    localStorage.removeItem('token');
-    setToken(null);
     setUser(null);
+    setToken(null);
+    localStorage.removeItem('token');
   };
 
-  const toggleTheme = () => {
-    setTheme(prev => prev === 'light' ? 'dark' : 'light');
-  };
-
-  const solveMathProblem = async () => {
+  const solveMath = async () => {
     if (!mathQuestion.trim()) return;
+    
     setMathLoading(true);
+    setMathSolution(null);
+    
     try {
-      const response = await axios.post(`${API}/ai/solve-math`, {
-        question: mathQuestion
-      }, {
-        headers: token ? { Authorization: `Bearer ${token}` } : {}
+      const response = await axios.post(`${API}/math/solve`, {
+        expression: mathQuestion
       });
       setMathSolution(response.data);
     } catch (error) {
-      setMathSolution({
-        error: true,
-        message: 'Failed to solve the problem. Please try again.'
-      });
+      console.error('Error solving math problem:', error);
+      setMathSolution({ error: 'Failed to solve the problem. Please try again.' });
     } finally {
       setMathLoading(false);
     }
   };
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
-        Loading...
-      </div>
-    );
+    return <div>Loading...</div>;
   }
 
   return (
-    <AuthContext.Provider value={{ user, token, login, logout, API }}>
+    <AuthContext.Provider value={{ user, login, logout, token }}>
       <ThemeContext.Provider value={{ theme, toggleTheme }}>
-        <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-200">
+        <div className="min-h-screen bg-background text-foreground">
           <HashRouter>
-            {/* Enhanced navigation with theme toggle and AI Math Solver */}
-            <nav className="w-full border-b bg-white/70 dark:bg-gray-800/70 backdrop-blur supports-[backdrop-filter]:bg-white/60 dark:supports-[backdrop-filter]:bg-gray-800/60 transition-colors duration-200">
-              <div className="max-w-6xl mx-auto px-4 py-3 flex items-center gap-4 text-sm">
-                <Link className="font-semibold text-gray-900 dark:text-white" to="/">
-                  DexNote
-                </Link>
-                <div className="flex items-center gap-3 text-gray-700 dark:text-gray-300">
-                  <Link to="/courses">Courses</Link>
-                  <Link to="/ai-tools">AI Tools</Link>
-                  <Link to="/notes">Notes</Link>
-                  <Link className="text-blue-600 dark:text-blue-400 font-medium" to="/math-magic">
-                    MathMagic
-                  </Link>
-                </div>
-                <div className="ml-auto flex items-center gap-3">
-                  {/* AI Math Solver Widget */}
+            <nav className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="flex justify-between items-center h-16">
+                  <Link to="/" className="text-2xl font-bold text-primary">DexNote</Link>
                   <Dialog>
                     <DialogTrigger asChild>
-                      <Button variant="outline" size="sm" className="gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="gap-2"
+                        aria-label="Open Math Solver"
+                      >
                         <Calculator className="h-4 w-4" />
                         Math Solver
                       </Button>
                     </DialogTrigger>
-                    <DialogContent className="sm:max-w-[525px] dark:bg-gray-800 dark:text-white">
+                    <DialogContent className="sm:max-w-[600px]">
                       <DialogHeader>
-                        <DialogTitle>AI Math Solver</DialogTitle>
-                        <DialogDescription className="dark:text-gray-300">
-                          Enter your math problem and get step-by-step solutions
+                        <DialogTitle>Math Problem Solver</DialogTitle>
+                        <DialogDescription>
+                          Enter your math question below and get step-by-step solutions.
                         </DialogDescription>
                       </DialogHeader>
                       <div className="space-y-4 py-4">
                         <Textarea
-                          placeholder="Enter your math question here... (e.g., Solve x^2 + 5x + 6 = 0)"
+                          placeholder="Enter your math problem (e.g., 2x + 5 = 15)"
                           value={mathQuestion}
                           onChange={(e) => setMathQuestion(e.target.value)}
-                          className="min-h-[100px] dark:bg-gray-700 dark:text-white"
+                          className="min-h-[100px]"
                         />
                         <Button 
-                          onClick={solveMathProblem} 
+                          onClick={solveMath} 
                           disabled={mathLoading || !mathQuestion.trim()}
                           className="w-full"
                         >
-                          {mathLoading ? 'Solving...' : 'Solve Problem'}
+                          {mathLoading ? 'Solving...' : 'Solve'}
                         </Button>
+                        
                         {mathSolution && (
-                          <div className="mt-4 p-4 rounded-lg bg-gray-50 dark:bg-gray-700">
+                          <div className="mt-4 p-4 bg-secondary rounded-lg">
                             {mathSolution.error ? (
-                              <p className="text-red-600 dark:text-red-400">{mathSolution.message}</p>
+                              <p className="text-destructive">{mathSolution.error}</p>
                             ) : (
                               <div className="space-y-2">
-                                <h4 className="font-semibold">Solution:</h4>
-                                <div className="text-sm whitespace-pre-wrap">{mathSolution.solution}</div>
+                                <h3 className="font-semibold">Solution:</h3>
+                                <div className="whitespace-pre-wrap">{mathSolution.solution || mathSolution.answer}</div>
                                 {mathSolution.steps && (
-                                  <div className="mt-3">
+                                  <div className="mt-2">
                                     <h4 className="font-semibold">Steps:</h4>
-                                    <ol className="list-decimal list-inside space-y-1 text-sm">
-                                      {mathSolution.steps.map((step, idx) => (
-                                        <li key={idx}>{step}</li>
+                                    <ol className="list-decimal list-inside space-y-1">
+                                      {mathSolution.steps.map((step, index) => (
+                                        <li key={index}>{step}</li>
                                       ))}
                                     </ol>
                                   </div>
@@ -183,7 +174,6 @@ function App() {
                       </div>
                     </DialogContent>
                   </Dialog>
-                  {/* Theme Toggle */}
                   <Button 
                     variant="outline" 
                     size="sm" 
