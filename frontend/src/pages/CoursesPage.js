@@ -34,213 +34,201 @@ const HARDCODED_COURSES = [
     id: 3,
     title: 'Python for Data Science',
     description:
-      'Learn Python programming with focus on data analysis, pandas, and numpy.',
-    category: 'coding',
+      'Explore Python libraries like NumPy, Pandas, and Matplotlib for data analysis.',
+    category: 'data',
     difficulty: 'Intermediate',
-    duration: '8 weeks',
-    modules_count: 16,
+    duration: '5 weeks',
+    modules_count: 10,
     pdfUrl: 'https://example.com/python-data-science.pdf',
   },
   {
     id: 4,
     title: 'Machine Learning Basics',
     description:
-      'Get started with machine learning algorithms and techniques.',
-    category: 'ai',
+      'Introduction to machine learning algorithms and their practical applications.',
+    category: 'data',
     difficulty: 'Intermediate',
-    duration: '10 weeks',
-    modules_count: 20,
+    duration: '8 weeks',
+    modules_count: 15,
     pdfUrl: 'https://example.com/ml-basics.pdf',
   },
   {
     id: 5,
-    title: 'Linear Algebra',
-    description:
-      'Master the mathematical foundations essential for data science and ML.',
-    category: 'mathematics',
-    difficulty: 'Intermediate',
-    duration: '6 weeks',
-    modules_count: 10,
-    pdfUrl: 'https://example.com/linear-algebra.pdf',
-  },
-  {
-    id: 6,
-    title: 'Deep Learning Fundamentals',
-    description:
-      'Dive into neural networks, CNNs, RNNs, and modern deep learning architectures.',
-    category: 'ai',
-    difficulty: 'Advanced',
-    duration: '12 weeks',
-    modules_count: 24,
-    pdfUrl: 'https://example.com/deep-learning.pdf',
+    title: 'UI/UX Design Principles',
+    description: 'Learn the core principles of user interface and user experience design.',
+    category: 'design',
+    difficulty: 'Beginner',
+    duration: '3 weeks',
+    modules_count: 6,
+    pdfUrl: 'https://example.com/uiux-design.pdf',
   },
 ];
 
-const CourseCard = ({ course }) => {
-  const getCategoryColor = (category) => {
-    const colors = {
-      coding: 'from-blue-600 to-blue-700',
-      ai: 'from-purple-600 to-purple-700',
-      mathematics: 'from-teal-600 to-teal-700',
-    };
-    return colors[category] || 'from-gray-600 to-gray-700';
-  };
-
-  const getCategoryBadgeColor = (category) => {
-    const colors = {
-      coding: 'bg-blue-100 text-blue-700',
-      ai: 'bg-purple-100 text-purple-700',
-      mathematics: 'bg-teal-100 text-teal-700',
-    };
-    return colors[category] || 'bg-gray-100 text-gray-700';
-  };
-
-  return (
-    <Link to={`/courses/${course.id}`} className="group">
-      <div className="bg-white/60 backdrop-blur-sm rounded-2xl border border-slate-200 p-6 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-        <div className="flex items-start justify-between mb-4">
-          <div className={`w-16 h-16 bg-gradient-to-br ${getCategoryColor(course.category)} rounded-2xl flex items-center justify-center`}>
-            <BookOpen className="text-white" size={32} />
-          </div>
-          <Badge className={getCategoryBadgeColor(course.category)}>
-            {course.category.charAt(0).toUpperCase() + course.category.slice(1)}
-          </Badge>
-        </div>
-        <h3 className="text-xl font-bold text-slate-900 mb-2 group-hover:text-blue-600 transition-colors">
-          {course.title}
-        </h3>
-        <p className="text-slate-600 text-sm mb-4 line-clamp-2">
-          {course.description}
-        </p>
-        <div className="space-y-2 mb-4">
-          <div className="flex items-center gap-2 text-sm text-slate-600">
-            <Sparkles className="text-blue-600" size={16} />
-            <span>{course.modules_count} modules</span>
-          </div>
-          <div className="flex items-center gap-2 text-sm text-slate-600">
-            <Clock className="text-teal-600" size={16} />
-            <span>{course.duration}</span>
-          </div>
-          <div className="flex items-center gap-2 text-sm text-slate-600">
-            <Sparkles className="text-purple-600" size={16} />
-            <span>{course.difficulty}</span>
-          </div>
-        </div>
-        <Button className={`w-full bg-gradient-to-r ${getCategoryColor(course.category)} text-white hover:opacity-90`}>
-          View Course
-        </Button>
-      </div>
-    </Link>
-  );
-};
-
 const CoursesPage = () => {
   const navigate = useNavigate();
+  const [courses, setCourses] = useState(HARDCODED_COURSES);
+  const [loading, setLoading] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('all');
+
+  useEffect(() => {
+    fetchCourses();
+  }, []);
+
+  const fetchCourses = async () => {
+    setLoading(true);
+    try {
+      // Simulating an API call with a delay
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      setCourses(HARDCODED_COURSES);
+    } catch (error) {
+      toast.error('Failed to fetch courses');
+      console.error('Error fetching courses:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCourseClick = (course) => {
+    if (course.pdfUrl) {
+      window.open(course.pdfUrl, '_blank');
+      toast.success(`Opening ${course.title}`);
+    } else {
+      toast.error('PDF not available for this course');
+    }
+  };
 
   const filteredCourses =
     selectedCategory === 'all'
-      ? HARDCODED_COURSES
-      : HARDCODED_COURSES.filter((course) => course.category === selectedCategory);
+      ? courses
+      : courses.filter((course) => course.category === selectedCategory);
+
+  const getDifficultyColor = (difficulty) => {
+    const colors = {
+      Beginner: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
+      Intermediate: 'bg-blue-500/20 text-blue-300 border-blue-500/30',
+      Advanced: 'bg-purple-500/20 text-purple-300 border-purple-500/30',
+    };
+    return colors[difficulty] || 'bg-gray-500/20 text-gray-300 border-gray-500/30';
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-teal-50">
-      {/* Navigation */}
-      <nav className="fixed top-0 w-full backdrop-blur-md bg-white/70 border-b border-slate-200 z-50">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-          <button
-            onClick={() => navigate('/dashboard')}
-            className="flex items-center gap-2 text-slate-700 hover:text-blue-600 transition-colors"
-          >
-            <ArrowLeft size={20} />
-            <span className="font-semibold">Back to Dashboard</span>
-          </button>
-          <div className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-teal-600 bg-clip-text text-transparent">
-            DexNote Courses
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-slate-900 to-black text-white">
+      {/* Header */}
+      <div className="border-b border-gray-800/50 bg-black/30 backdrop-blur-xl sticky top-0 z-50">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between py-4">
+            <div className="flex items-center gap-4">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => navigate('/dashboard')}
+                className="hover:bg-white/10"
+              >
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Back
+              </Button>
+              <div>
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+                  Course Library
+                </h1>
+                <p className="text-sm text-gray-400">Expand your knowledge</p>
+              </div>
+            </div>
           </div>
-        </div>
-      </nav>
-
-      {/* Header Section */}
-      <div className="pt-24 pb-12 px-6">
-        <div className="max-w-7xl mx-auto text-center">
-          <div className="inline-block px-6 py-3 bg-gradient-to-r from-blue-600 via-teal-600 to-purple-600 rounded-2xl mb-6">
-            <h1 className="text-4xl md:text-5xl font-bold text-white">
-              Explore Our Courses
-            </h1>
-          </div>
-          <p className="text-xl text-slate-600 max-w-2xl mx-auto">
-            Discover a wide range of courses designed to help you master new skills and achieve your learning goals.
-          </p>
         </div>
       </div>
 
-      {/* Courses Section */}
-      <div className="max-w-7xl mx-auto px-6 pb-12">
-        <Tabs defaultValue="all" className="w-full">
-          <TabsList className="mb-8 flex justify-center bg-white/60 backdrop-blur-sm p-2 rounded-2xl border border-slate-200">
-            <TabsTrigger
-              value="all"
-              onClick={() => setSelectedCategory('all')}
-              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-teal-600 data-[state=active]:text-white"
-            >
+      {/* Main Content */}
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Category Tabs */}
+        <Tabs
+          defaultValue="all"
+          className="w-full"
+          onValueChange={(value) => setSelectedCategory(value)}
+        >
+          <TabsList className="bg-gray-800/50 border border-gray-700/50 backdrop-blur-sm mb-8">
+            <TabsTrigger value="all" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-purple-600">
               All Courses
             </TabsTrigger>
-            <TabsTrigger
-              value="coding"
-              onClick={() => setSelectedCategory('coding')}
-              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-blue-700 data-[state=active]:text-white"
-            >
+            <TabsTrigger value="coding" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-purple-600">
               Coding
             </TabsTrigger>
-            <TabsTrigger
-              value="ai"
-              onClick={() => setSelectedCategory('ai')}
-              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-purple-700 data-[state=active]:text-white"
-            >
-              AI Tools
+            <TabsTrigger value="data" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-purple-600">
+              Data Science
             </TabsTrigger>
-            <TabsTrigger
-              value="mathematics"
-              onClick={() => setSelectedCategory('mathematics')}
-              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-teal-600 data-[state=active]:to-teal-700 data-[state=active]:text-white"
-            >
-              Mathematics
+            <TabsTrigger value="design" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-purple-600">
+              Design
             </TabsTrigger>
           </TabsList>
 
           <TabsContent value={selectedCategory} className="mt-0">
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredCourses.map((course) => (
-                <CourseCard key={course.id} course={course} />
-              ))}
-            </div>
-            {filteredCourses.length === 0 && (
-              <div className="text-center py-12">
-                <p className="text-slate-600 text-lg">No courses found in this category.</p>
+            {loading ? (
+              <div className="flex items-center justify-center py-20">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+              </div>
+            ) : filteredCourses.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredCourses.map((course) => (
+                  <div
+                    key={course.id}
+                    className="group relative bg-gradient-to-br from-gray-800/50 via-gray-800/30 to-gray-900/50 border border-gray-700/50 rounded-xl p-6 hover:border-blue-500/50 transition-all duration-300 hover:shadow-2xl hover:shadow-blue-500/20 cursor-pointer backdrop-blur-sm"
+                    onClick={() => handleCourseClick(course)}
+                  >
+                    {/* Gradient Overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-blue-600/0 via-purple-600/0 to-pink-600/0 group-hover:from-blue-600/5 group-hover:via-purple-600/5 group-hover:to-pink-600/5 rounded-xl transition-all duration-300"></div>
+
+                    <div className="relative z-10">
+                      {/* Header */}
+                      <div className="flex items-start justify-between mb-4">
+                        <div className="p-3 bg-gradient-to-br from-blue-600/20 to-purple-600/20 rounded-lg border border-blue-500/30">
+                          <BookOpen className="h-6 w-6 text-blue-400" />
+                        </div>
+                        <Badge className={`${getDifficultyColor(course.difficulty)} border`}>
+                          {course.difficulty}
+                        </Badge>
+                      </div>
+
+                      {/* Content */}
+                      <h3 className="text-xl font-bold mb-2 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent group-hover:from-blue-400 group-hover:to-purple-400 transition-all duration-300">
+                        {course.title}
+                      </h3>
+                      <p className="text-gray-400 text-sm mb-4 line-clamp-2">
+                        {course.description}
+                      </p>
+
+                      {/* Footer */}
+                      <div className="flex items-center justify-between pt-4 border-t border-gray-700/50">
+                        <div className="flex items-center gap-4 text-sm text-gray-400">
+                          <div className="flex items-center gap-1">
+                            <Clock className="h-4 w-4" />
+                            <span>{course.duration}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <Sparkles className="h-4 w-4" />
+                            <span>{course.modules_count} modules</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Hover Effect Border */}
+                    <div className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                      <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-600/20 via-purple-600/20 to-pink-600/20 blur-xl"></div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-20">
+                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-800/50 border border-gray-700/50 mb-4">
+                  <BookOpen className="h-8 w-8 text-gray-500" />
+                </div>
+                <h3 className="text-xl font-semibold mb-2 text-gray-300">No courses found</h3>
+                <p className="text-gray-500">Try selecting a different category</p>
               </div>
             )}
           </TabsContent>
         </Tabs>
-      </div>
-
-      {/* CTA Section */}
-      <div className="max-w-7xl mx-auto px-6 pb-12">
-        <div className="bg-gradient-to-r from-blue-600 to-teal-600 rounded-2xl p-8 md:p-12 text-center">
-          <h2 className="text-3xl font-bold text-white mb-4">
-            Can't find what you're looking for?
-          </h2>
-          <p className="text-white/90 text-lg mb-6">
-            We're constantly adding new courses. Check back soon or request a course topic!
-          </p>
-          <Button
-            onClick={() => navigate('/dashboard')}
-            size="lg"
-            className="bg-white text-blue-600 hover:bg-slate-100"
-          >
-            Back to Dashboard
-          </Button>
-        </div>
       </div>
     </div>
   );
