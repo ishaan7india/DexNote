@@ -25,7 +25,8 @@ import {
 } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000';
+// Backend URL configuration - connected to production backend
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'https://dexnote.onrender.com';
 const API = `${BACKEND_URL}/api`;
 
 export const AuthContext = createContext();
@@ -182,7 +183,6 @@ function App() {
                       </div>
                     </DialogContent>
                   </Dialog>
-
                   {/* Theme Toggle */}
                   <Button 
                     variant="outline" 
@@ -197,7 +197,6 @@ function App() {
                       <Sun className="h-4 w-4" />
                     )}
                   </Button>
-
                   {user ? (
                     <>
                       <Link to="/dashboard">Dashboard</Link>
@@ -212,7 +211,6 @@ function App() {
                 </div>
               </div>
             </nav>
-
             <Routes>
               <Route path="/" element={<LandingPage />} />
               <Route path="/math-magic" element={<MathMagicBlog />} />
