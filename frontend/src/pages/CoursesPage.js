@@ -34,61 +34,109 @@ const HARDCODED_COURSES = [
     id: 3,
     title: 'Python for Data Science',
     description:
-      'Explore Python libraries like NumPy, Pandas, and Matplotlib for data analysis.',
-    category: 'data',
-    difficulty: 'Intermediate',
-    duration: '5 weeks',
-    modules_count: 10,
-    pdfUrl: 'https://example.com/python-data-science.pdf',
-  },
-  {
-    id: 4,
-    title: 'Machine Learning Basics',
-    description:
-      'Introduction to machine learning algorithms and their practical applications.',
+      'Explore data analysis, visualization, and machine learning with Python.',
     category: 'data',
     difficulty: 'Intermediate',
     duration: '8 weeks',
-    modules_count: 15,
-    pdfUrl: 'https://example.com/ml-basics.pdf',
+    modules_count: 16,
+    pdfUrl: 'https://example.com/python-ds.pdf',
+  },
+  {
+    id: 4,
+    title: 'Machine Learning Fundamentals',
+    description:
+      'Introduction to machine learning algorithms, neural networks, and AI concepts.',
+    category: 'data',
+    difficulty: 'Advanced',
+    duration: '10 weeks',
+    modules_count: 20,
+    pdfUrl: 'https://example.com/ml-fundamentals.pdf',
   },
   {
     id: 5,
     title: 'UI/UX Design Principles',
-    description: 'Learn the core principles of user interface and user experience design.',
+    description:
+      'Learn user interface and user experience design best practices and tools.',
     category: 'design',
     difficulty: 'Beginner',
-    duration: '3 weeks',
-    modules_count: 6,
+    duration: '5 weeks',
+    modules_count: 10,
     pdfUrl: 'https://example.com/uiux-design.pdf',
+  },
+  {
+    id: 6,
+    title: 'Math for Grade 6-8',
+    description:
+      'Master middle school mathematics including fractions, decimals, percentages, basic algebra, geometry, and pre-algebra concepts.',
+    category: 'math',
+    difficulty: 'Beginner',
+    duration: '12 weeks',
+    modules_count: 24,
+    pdfUrl: 'https://example.com/math-6-8.pdf',
+  },
+  {
+    id: 7,
+    title: 'Algebra I - Grade 9',
+    description:
+      'Comprehensive Algebra I course covering linear equations, inequalities, functions, polynomials, factoring, quadratic equations, and graphing.',
+    category: 'math',
+    difficulty: 'Intermediate',
+    duration: '16 weeks',
+    modules_count: 32,
+    pdfUrl: 'https://example.com/algebra-1-grade9.pdf',
+  },
+  {
+    id: 8,
+    title: 'Geometry - Grade 10',
+    description:
+      'Complete geometry course including points, lines, angles, triangles, circles, polygons, transformations, proofs, and coordinate geometry.',
+    category: 'math',
+    difficulty: 'Intermediate',
+    duration: '16 weeks',
+    modules_count: 32,
+    pdfUrl: 'https://example.com/geometry-grade10.pdf',
+  },
+  {
+    id: 9,
+    title: 'Algebra II - Grade 11',
+    description:
+      'Advanced algebra topics including exponential and logarithmic functions, rational expressions, conic sections, sequences, series, and probability.',
+    category: 'math',
+    difficulty: 'Advanced',
+    duration: '16 weeks',
+    modules_count: 32,
+    pdfUrl: 'https://example.com/algebra-2-grade11.pdf',
+  },
+  {
+    id: 10,
+    title: 'Pre-Calculus - Grade 12',
+    description:
+      'Pre-calculus fundamentals covering trigonometry, complex numbers, vectors, matrices, polar coordinates, and limits to prepare for calculus.',
+    category: 'math',
+    difficulty: 'Advanced',
+    duration: '16 weeks',
+    modules_count: 32,
+    pdfUrl: 'https://example.com/precalculus-grade12.pdf',
   },
 ];
 
 const CoursesPage = () => {
   const navigate = useNavigate();
-  const [courses, setCourses] = useState(HARDCODED_COURSES);
-  const [loading, setLoading] = useState(false);
+  const [courses, setCourses] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('all');
 
   useEffect(() => {
-    fetchCourses();
+    // Use hardcoded courses
+    setCourses(HARDCODED_COURSES);
   }, []);
 
-  const fetchCourses = async () => {
-    setLoading(true);
-    try {
-      // Simulating an API call with a delay
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      setCourses(HARDCODED_COURSES);
-    } catch (error) {
-      toast.error('Failed to fetch courses');
-      console.error('Error fetching courses:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const filteredCourses =
+    selectedCategory === 'all'
+      ? courses
+      : courses.filter((course) => course.category === selectedCategory);
 
   const handleCourseClick = (course) => {
+    // Open PDF in a new tab if available
     if (course.pdfUrl) {
       window.open(course.pdfUrl, '_blank');
       toast.success(`Opening ${course.title}`);
@@ -97,41 +145,29 @@ const CoursesPage = () => {
     }
   };
 
-  const filteredCourses =
-    selectedCategory === 'all'
-      ? courses
-      : courses.filter((course) => course.category === selectedCategory);
-
-  const getDifficultyColor = (difficulty) => {
-    const colors = {
-      Beginner: 'bg-green-100 text-green-700 border-green-300',
-      Intermediate: 'bg-blue-100 text-blue-700 border-blue-300',
-      Advanced: 'bg-purple-100 text-purple-700 border-purple-300',
-    };
-    return colors[difficulty] || 'bg-gray-100 text-gray-700 border-gray-300';
-  };
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50 text-gray-900">
+    <div className="min-h-screen bg-gradient-to-br from-white via-blue-50/30 to-purple-50/30">
       {/* Header */}
-      <div className="border-b border-gray-200 bg-white/80 backdrop-blur-xl sticky top-0 z-50 shadow-sm">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between py-4">
+      <div className="border-b border-gray-200 bg-white/80 backdrop-blur-md sticky top-0 z-10 shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => navigate('/dashboard')}
-                className="hover:bg-gray-100"
+                className="hover:bg-blue-50 transition-colors"
               >
                 <ArrowLeft className="h-4 w-4 mr-2" />
-                Back
+                Back to Dashboard
               </Button>
               <div>
                 <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
-                  Course Library
+                  Available Courses
                 </h1>
-                <p className="text-sm text-gray-600">Expand your knowledge</p>
+                <p className="text-sm text-gray-500 mt-1">
+                  {filteredCourses.length} course{filteredCourses.length !== 1 ? 's' : ''} available
+                </p>
               </div>
             </div>
           </div>
@@ -139,66 +175,83 @@ const CoursesPage = () => {
       </div>
 
       {/* Main Content */}
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Category Tabs */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Tabs
           defaultValue="all"
           className="w-full"
           onValueChange={(value) => setSelectedCategory(value)}
         >
-          <TabsList className="bg-gray-100 border border-gray-200 backdrop-blur-sm mb-8">
-            <TabsTrigger
-              value="all"
-              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-purple-600 data-[state=active]:text-white"
-            >
-              All Courses
-            </TabsTrigger>
-            <TabsTrigger
-              value="coding"
-              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-purple-600 data-[state=active]:text-white"
-            >
-              Coding
-            </TabsTrigger>
-            <TabsTrigger
-              value="data"
-              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-purple-600 data-[state=active]:text-white"
-            >
-              Data Science
-            </TabsTrigger>
-            <TabsTrigger
-              value="design"
-              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-purple-600 data-[state=active]:text-white"
-            >
-              Design
-            </TabsTrigger>
-          </TabsList>
+          {/* Category Tabs */}
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-2 mb-8">
+            <TabsList className="w-full grid grid-cols-5 gap-2 bg-transparent">
+              <TabsTrigger
+                value="all"
+                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-purple-500 data-[state=active]:text-white rounded-lg transition-all duration-300 hover:bg-gray-100"
+              >
+                All Courses
+              </TabsTrigger>
+              <TabsTrigger
+                value="coding"
+                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-cyan-500 data-[state=active]:text-white rounded-lg transition-all duration-300 hover:bg-gray-100"
+              >
+                Coding
+              </TabsTrigger>
+              <TabsTrigger
+                value="data"
+                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-pink-500 data-[state=active]:text-white rounded-lg transition-all duration-300 hover:bg-gray-100"
+              >
+                Data Science
+              </TabsTrigger>
+              <TabsTrigger
+                value="design"
+                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-pink-500 data-[state=active]:to-rose-500 data-[state=active]:text-white rounded-lg transition-all duration-300 hover:bg-gray-100"
+              >
+                Design
+              </TabsTrigger>
+              <TabsTrigger
+                value="math"
+                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-green-500 data-[state=active]:to-teal-500 data-[state=active]:text-white rounded-lg transition-all duration-300 hover:bg-gray-100"
+              >
+                Mathematics
+              </TabsTrigger>
+            </TabsList>
+          </div>
 
+          {/* Course Grid */}
           <TabsContent value={selectedCategory} className="mt-0">
-            {loading ? (
-              <div className="flex items-center justify-center py-20">
-                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-              </div>
-            ) : filteredCourses.length > 0 ? (
+            {filteredCourses.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredCourses.map((course) => (
                   <div
                     key={course.id}
-                    className="group relative bg-white border border-gray-200 rounded-xl p-6 hover:border-blue-400 hover:shadow-xl transition-all duration-300 cursor-pointer"
                     onClick={() => handleCourseClick(course)}
+                    className="group relative bg-white rounded-xl shadow-sm border border-gray-200 p-6 cursor-pointer transition-all duration-300 hover:shadow-xl hover:-translate-y-1 hover:border-blue-300"
                   >
-                    {/* Gradient Overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-blue-50/0 via-purple-50/0 to-pink-50/0 group-hover:from-blue-50/30 group-hover:via-purple-50/30 group-hover:to-pink-50/30 rounded-xl transition-all duration-300"></div>
+                    {/* Difficulty Badge */}
+                    <div className="absolute top-4 right-4">
+                      <Badge
+                        variant="secondary"
+                        className={`${
+                          course.difficulty === 'Beginner'
+                            ? 'bg-green-100 text-green-700 border-green-200'
+                            : course.difficulty === 'Intermediate'
+                            ? 'bg-yellow-100 text-yellow-700 border-yellow-200'
+                            : 'bg-red-100 text-red-700 border-red-200'
+                        } border`}
+                      >
+                        {course.difficulty}
+                      </Badge>
+                    </div>
 
-                    <div className="relative z-10">
-                      {/* Header */}
-                      <div className="flex items-start justify-between mb-4">
-                        <div className="p-3 bg-gradient-to-br from-blue-100 to-purple-100 rounded-lg border border-blue-200">
-                          <BookOpen className="h-6 w-6 text-blue-600" />
-                        </div>
+                    {/* Content */}
+                    <div className="pt-2">
+                      {/* Category Icon/Tag */}
+                      <div className="mb-3">
                         <Badge
-                          className={`${getDifficultyColor(course.difficulty)} border`}
+                          variant="outline"
+                          className="bg-gradient-to-r from-blue-50 to-purple-50 border-blue-200 text-blue-700 capitalize"
                         >
-                          {course.difficulty}
+                          {course.category}
                         </Badge>
                       </div>
 
