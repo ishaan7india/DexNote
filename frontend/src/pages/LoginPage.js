@@ -21,7 +21,6 @@ const LoginPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-
     try {
       const response = await axios.post(`${API}/auth/login`, { email, password });
       login(response.data.token, response.data.user);
@@ -40,25 +39,22 @@ const LoginPage = () => {
         <Link 
           to="/" 
           className="inline-flex items-center gap-2 text-slate-600 hover:text-slate-900 mb-8 transition-colors"
-          data-testid="back-to-home-link"
+          data-testid="back-to-home"
         >
-          <ArrowLeft className="w-4 h-4" />
-          Back to home
+          <ArrowLeft size={20} />
+          <span>Back to home</span>
         </Link>
-        
-        <div className="bg-white/80 backdrop-blur-md p-8 rounded-2xl border border-slate-200 shadow-xl">
+
+        <div className="bg-white/80 backdrop-blur-sm shadow-2xl rounded-2xl p-8 border border-slate-200">
           <div className="text-center mb-8">
-            <h1 
-              className="text-3xl font-bold mb-2 bg-gradient-to-r from-blue-600 to-teal-600 bg-clip-text text-transparent"
-              style={{ fontFamily: 'Space Grotesk, sans-serif' }}
-            >
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-teal-600 bg-clip-text text-transparent mb-2">
               Welcome Back
             </h1>
-            <p className="text-slate-600">Sign in to continue your learning</p>
+            <p className="text-slate-600">Sign in to continue to DexNote</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
+            <div className="space-y-2">
               <Label htmlFor="email" className="text-slate-700">Email</Label>
               <Input
                 id="email"
@@ -67,12 +63,12 @@ const LoginPage = () => {
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 placeholder="you@example.com"
-                className="mt-2"
-                data-testid="login-email-input"
+                className="border-slate-300 focus:border-blue-500"
+                data-testid="login-email"
               />
             </div>
 
-            <div>
+            <div className="space-y-2">
               <Label htmlFor="password" className="text-slate-700">Password</Label>
               <Input
                 id="password"
@@ -81,13 +77,13 @@ const LoginPage = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 placeholder="••••••••"
-                className="mt-2"
-                data-testid="login-password-input"
+                className="border-slate-300 focus:border-blue-500"
+                data-testid="login-password"
               />
             </div>
 
-            <Button
-              type="submit"
+            <Button 
+              type="submit" 
               disabled={loading}
               className="w-full bg-gradient-to-r from-blue-600 to-teal-600 text-white hover:from-blue-700 hover:to-teal-700"
               data-testid="login-submit-btn"
