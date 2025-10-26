@@ -34,72 +34,77 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-teal-50 flex items-center justify-center px-6">
-      <div className="w-full max-w-md">
-        <Link 
-          to="/" 
-          className="inline-flex items-center gap-2 text-slate-600 hover:text-slate-900 mb-8 transition-colors"
-          data-testid="back-to-home"
-        >
-          <ArrowLeft size={20} />
-          <span>Back to home</span>
-        </Link>
-
-        <div className="bg-white/80 backdrop-blur-sm shadow-2xl rounded-2xl p-8 border border-slate-200">
-          <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-teal-600 bg-clip-text text-transparent mb-2">
-              Welcome Back
-            </h1>
-            <p className="text-slate-600">Sign in to continue to DexNote</p>
-          </div>
-
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="space-y-2">
-              <Label htmlFor="email" className="text-slate-700">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                placeholder="you@example.com"
-                className="border-slate-300 focus:border-blue-500"
-                data-testid="login-email"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="password" className="text-slate-700">Password</Label>
-              <Input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                placeholder="••••••••"
-                className="border-slate-300 focus:border-blue-500"
-                data-testid="login-password"
-              />
-            </div>
-
-            <Button 
-              type="submit" 
-              disabled={loading}
-              className="w-full bg-gradient-to-r from-blue-600 to-teal-600 text-white hover:from-blue-700 hover:to-teal-700"
-              data-testid="login-submit-btn"
-            >
-              {loading ? 'Signing in...' : 'Sign In'}
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+      {/* Header */}
+      <header className="bg-white shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+          <h1 className="text-2xl font-bold text-gray-900">DexNote</h1>
+          <div className="flex gap-3">
+            <Button variant="outline" asChild>
+              <Link to="/login">Login</Link>
             </Button>
-          </form>
-
-          <div className="mt-6 text-center text-sm text-slate-600">
-            Don't have an account?{' '}
-            <Link to="/signup" className="text-blue-600 hover:text-blue-700 font-medium" data-testid="signup-link">
-              Sign up
-            </Link>
+            <Button variant="outline" asChild>
+              <Link to="/signup">Signup</Link>
+            </Button>
+            <Button variant="outline" asChild>
+              <Link to="/math-solver">Math Solver</Link>
+            </Button>
           </div>
         </div>
-      </div>
+      </header>
+
+      {/* Main Content */}
+      <main className="flex items-center justify-center px-4 py-12">
+        <div className="w-full max-w-md">
+          <div className="bg-white rounded-lg shadow-xl p-8">
+            <Button variant="ghost" asChild className="mb-6">
+              <Link to="/" className="flex items-center gap-2">
+                <ArrowLeft className="h-4 w-4" />
+                Back to Home
+              </Link>
+            </Button>
+
+            <h2 className="text-3xl font-bold text-center mb-8">Welcome Back</h2>
+
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="space-y-2">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="Enter your email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="password">Password</Label>
+                <Input
+                  id="password"
+                  type="password"
+                  placeholder="Enter your password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+              </div>
+
+              <Button type="submit" className="w-full" disabled={loading}>
+                {loading ? 'Logging in...' : 'Login'}
+              </Button>
+            </form>
+
+            <p className="text-center text-sm text-gray-600 mt-6">
+              Don't have an account?{' '}
+              <Link to="/signup" className="text-blue-600 hover:underline font-medium">
+                Sign up
+              </Link>
+            </p>
+          </div>
+        </div>
+      </main>
     </div>
   );
 };
