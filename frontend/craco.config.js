@@ -35,7 +35,6 @@ const webpackConfig = {
       '@': path.resolve(__dirname, 'src'),
     },
     configure: (webpackConfig) => {
-
       // Disable hot reload completely if environment variable is set
       if (config.disableHotReload) {
         // Remove hot reload related plugins
@@ -62,6 +61,17 @@ const webpackConfig = {
           ],
         };
       }
+
+      // Disable HTML minification to avoid html-minifier-terser errors
+      webpackConfig.plugins = webpackConfig.plugins.map(plugin => {
+        if (plugin.constructor.name === 'HtmlWebpackPlugin') {
+          return new plugin.constructor({
+            ...plugin.options,
+            minify: false,
+          });
+        }
+        return plugin;
+      });
 
       // Add health check plugin to webpack if enabled
       if (config.enableHealthCheck && healthPluginInstance) {
@@ -91,7 +101,6 @@ if (config.enableVisualEdits || config.enableHealthCheck) {
     // Add health check endpoints if enabled
     if (config.enableHealthCheck && setupHealthEndpoints && healthPluginInstance) {
       const originalSetupMiddlewares = devServerConfig.setupMiddlewares;
-
       devServerConfig.setupMiddlewares = (middlewares, devServer) => {
         // Call original setup if exists
         if (originalSetupMiddlewares) {
