@@ -40,9 +40,9 @@ jobs:
         env:
           CI: false
       
-      - name: Copy .nojekyll to build directory
+      - name: Create .nojekyll in build directory
         run: |
-          cp .nojekyll frontend/build/
+          echo "" > frontend/build/.nojekyll
       
       - name: Setup Pages
         uses: actions/configure-pages@v4
