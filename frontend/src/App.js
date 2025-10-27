@@ -46,6 +46,7 @@ function App() {
   const login = (newToken) => {
     localStorage.setItem('token', newToken);
     setToken(newToken);
+    setUser(userData);
   };
 
   const logout = () => {
